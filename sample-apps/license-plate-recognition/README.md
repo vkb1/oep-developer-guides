@@ -10,7 +10,7 @@ HuggingFace models to OpenVINO optimization to Intel DL Streamer pipelines.
 |---------|-------------|--------|-------------|
 | [V1](v1_sample_app/) | HuggingFace Models | YOLOv11 + TrOCR | Baseline detection & OCR with inference timing |
 | [V2](v2_sample_app/) | OpenVINO Optimized | YOLOv11-OV + TrOCR-OV | Model conversion to IR format, performance comparison |
-| [V3](v3_sample_app/) | DL Streamer Pipeline | YOLOv8 + PaddleOCR | GStreamer pipeline for real-time video processing |
+| [V3](v3_sample_app/) | DL Streamer Pipeline | YOLOv11-OV + TrOCR-OV | GStreamer pipeline for real-time video processing |
 
 ## Quick Start
 
@@ -105,12 +105,12 @@ license-plate-recognition/
 | YOLOv11 | [morsetechlab/yolov11-license-plate-detection](https://huggingface.co/morsetechlab/yolov11-license-plate-detection) | License plate detection |
 | TrOCR Base | [microsoft/trocr-base-printed](https://huggingface.co/microsoft/trocr-base-printed) | Printed text recognition |
 
-### V3 Models (DL Streamer / OpenVINO Model Zoo)
+### V3 Models (same as V2, OpenVINO IR format)
 
 | Model | Source | Task |
 |-------|--------|------|
-| YOLOv8 License Plate Detector | OpenVINO Model Zoo | License plate detection |
-| ch_PP-OCRv4_rec_infer | OpenVINO Model Zoo | OCR text recognition |
+| YOLOv11 (OpenVINO IR) | Converted from [morsetechlab/yolov11-license-plate-detection](https://huggingface.co/morsetechlab/yolov11-license-plate-detection) | License plate detection |
+| TrOCR Base (OpenVINO IR) | Converted from [microsoft/trocr-base-printed](https://huggingface.co/microsoft/trocr-base-printed) | Printed text recognition |
 
 ## Pipeline Architecture
 

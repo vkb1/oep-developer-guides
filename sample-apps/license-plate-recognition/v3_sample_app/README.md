@@ -3,26 +3,27 @@
 ## Overview
 
 This application adapts the Intel DL Streamer license plate recognition pipeline
-for processing smart parking video streams. It displays the input and annotated
-output streams side by side with FPS performance numbers.
+for processing smart parking video streams. It uses the same OpenVINO IR optimized
+models from V2 (YOLOv11 for detection and TrOCR for OCR) and displays the input
+and annotated output streams side by side with FPS performance numbers.
 
 Based on: [DL Streamer License Plate Recognition Sample](https://github.com/open-edge-platform/dlstreamer/tree/main/samples/gstreamer/gst_launch/license_plate_recognition)
 
 ## Architecture
 
-The pipeline uses a two-stage inference approach:
+The pipeline uses a two-stage inference approach with the V2 optimized models:
 
 ```
 Video Stream → Decode → License Plate Detection → OCR Classification → Output
-                            (YOLOv8)              (PaddleOCR)
+                            (YOLOv11-OV)              (TrOCR-OV)
 ```
 
 ### GStreamer Pipeline Elements
 
 | Element | Purpose |
 |---------|---------|
-| `gvadetect` | License plate detection using YOLOv8 |
-| `gvaclassify` | OCR text recognition using PaddleOCR |
+| `gvadetect` | License plate detection using YOLOv11 (OpenVINO IR) |
+| `gvaclassify` | OCR text recognition using TrOCR (OpenVINO IR) |
 | `gvawatermark` | Render detection annotations on video |
 | `gvafpscounter` | Measure and report FPS performance |
 | `gvametaconvert` | Convert detection metadata to JSON |
@@ -41,21 +42,20 @@ docker pull intel/dlstreamer:latest
 # https://github.com/open-edge-platform/dlstreamer
 ```
 
-### Download Models
+### Convert Models (using V2)
 
-The pipeline uses OpenVINO IR format models:
+This app uses the same OpenVINO IR models produced by V2's conversion script.
+Run the conversion from the project root:
 
 ```bash
-export MODELS_PATH=$HOME/models
-
-# Download license plate detection model
-omz_downloader --name yolov8_license_plate_detector \
-    -o $MODELS_PATH
-
-# Download OCR model
-omz_downloader --name ch_PP-OCRv4_rec_infer \
-    -o $MODELS_PATH
+cd v2_sample_app
+pip install -r requirements.txt
+python convert_models.py --output-dir ../models_ov
 ```
+
+This creates optimized models in the `models_ov/` directory:
+- `models_ov/yolo/` — YOLOv11 in OpenVINO IR format
+- `models_ov/trocr/` — TrOCR in OpenVINO IR format
 
 ## Usage
 

@@ -2,8 +2,9 @@
 
 This application adapts the DL Streamer license plate recognition pipeline
 to construct a GStreamer-based pipeline for processing smart parking video
-streams. It displays the input and annotated output streams side by side
-with FPS performance numbers.
+streams. It uses the same OpenVINO IR optimized models from V2 (YOLOv11 for
+detection and TrOCR for OCR), and displays the input and annotated output
+streams side by side with FPS performance numbers.
 
 Reference: https://github.com/open-edge-platform/dlstreamer/tree/main/samples/gstreamer/gst_launch/license_plate_recognition
 """
@@ -29,11 +30,10 @@ matplotlib.use("Agg")
 DEFAULT_VIDEO_URL = (
     "https://videos.pexels.com/video-files/3014296/3014296-hd_1920_1080_24fps.mp4"
 )
-DEFAULT_MODELS_PATH = os.environ.get("MODELS_PATH", os.path.expanduser("~/models"))
-DEFAULT_DETECTION_MODEL = (
-    "public/yolov8_license_plate_detector/FP32/yolov8_license_plate_detector.xml"
-)
-DEFAULT_OCR_MODEL = "public/ch_PP-OCRv4_rec_infer/FP32/ch_PP-OCRv4_rec_infer.xml"
+# Use the same V2 optimized OpenVINO IR models directory
+DEFAULT_MODELS_PATH = os.environ.get("MODELS_PATH", "models_ov")
+DEFAULT_DETECTION_MODEL_DIR = "yolo"
+DEFAULT_OCR_MODEL_DIR = "trocr"
 OUTPUT_DIR = Path("output")
 
 # DL Streamer GStreamer element names
@@ -42,6 +42,35 @@ GST_CLASSIFY = "gvaclassify"
 GST_WATERMARK = "gvawatermark"
 GST_FPS_COUNTER = "gvafpscounter"
 GST_META_CONVERT = "gvametaconvert"
+
+
+def find_model_xml(model_dir: str) -> str:
+    """Find an OpenVINO IR XML model file within a directory.
+
+    Searches the given directory (recursively) for .xml model files.
+    This allows V3 to use the same model directory layout produced by
+    V2's convert_models.py.
+
+    Args:
+        model_dir: Path to a directory containing OpenVINO IR model files.
+
+    Returns:
+        Absolute path to the first .xml model file found.
+
+    Raises:
+        FileNotFoundError: If no .xml file is found in the directory.
+    """
+    model_path = Path(model_dir)
+    if model_path.is_file() and model_path.suffix == ".xml":
+        return str(model_path)
+
+    xml_files = sorted(model_path.rglob("*.xml"))
+    if not xml_files:
+        raise FileNotFoundError(
+            f"No OpenVINO IR model (.xml) found in {model_dir}. "
+            "Run v2_sample_app/convert_models.py first to convert the models."
+        )
+    return str(xml_files[0])
 
 
 def check_dlstreamer_available() -> bool:
@@ -534,19 +563,28 @@ def main() -> None:
         "--models-path",
         type=str,
         default=DEFAULT_MODELS_PATH,
-        help=f"Path to models directory (default: {DEFAULT_MODELS_PATH})",
+        help=(
+            "Path to V2 optimized models directory "
+            f"(default: {DEFAULT_MODELS_PATH})"
+        ),
     )
     parser.add_argument(
         "--detection-model",
         type=str,
         default=None,
-        help="Override detection model path (default: auto-detect from models-path)",
+        help=(
+            "Override detection model path or directory "
+            "(default: <models-path>/yolo)"
+        ),
     )
     parser.add_argument(
         "--ocr-model",
         type=str,
         default=None,
-        help="Override OCR model path (default: auto-detect from models-path)",
+        help=(
+            "Override OCR model path or directory "
+            "(default: <models-path>/trocr)"
+        ),
     )
     parser.add_argument(
         "--device",
@@ -583,10 +621,25 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    # Resolve model paths
+    # Resolve model paths — use V2 optimized OV IR models
     models_path = Path(args.models_path)
-    det_model = args.detection_model or str(models_path / DEFAULT_DETECTION_MODEL)
-    ocr_model = args.ocr_model or str(models_path / DEFAULT_OCR_MODEL)
+    det_model_dir = args.detection_model or str(
+        models_path / DEFAULT_DETECTION_MODEL_DIR
+    )
+    ocr_model_dir = args.ocr_model or str(models_path / DEFAULT_OCR_MODEL_DIR)
+
+    # Find the .xml model files within the directories
+    try:
+        det_model = find_model_xml(det_model_dir)
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+
+    try:
+        ocr_model = find_model_xml(ocr_model_dir)
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
     output_path = Path(args.output_dir)
     output_path.mkdir(parents=True, exist_ok=True)

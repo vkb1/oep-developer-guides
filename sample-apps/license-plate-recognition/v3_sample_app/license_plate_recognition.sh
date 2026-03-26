@@ -24,11 +24,28 @@ set -euo pipefail
 
 # ----- Configuration --------------------------------------------------------
 
-MODELS_PATH="${MODELS_PATH:-$HOME/models}"
+# Use the same V2 optimized OpenVINO IR models
+MODELS_PATH="${MODELS_PATH:-models_ov}"
 
-# Models
-DETECTION_MODEL="${MODELS_PATH}/public/yolov8_license_plate_detector/FP32/yolov8_license_plate_detector.xml"
-OCR_MODEL="${MODELS_PATH}/public/ch_PP-OCRv4_rec_infer/FP32/ch_PP-OCRv4_rec_infer.xml"
+# Models — V2 converted OV IR models (YOLOv11 + TrOCR)
+# These are produced by v2_sample_app/convert_models.py
+DETECTION_MODEL_DIR="${MODELS_PATH}/yolo"
+OCR_MODEL_DIR="${MODELS_PATH}/trocr"
+
+# Auto-discover .xml model files within model directories
+find_model_xml() {
+    local model_dir="$1"
+    local xml_file
+    xml_file=$(find "$model_dir" -name "*.xml" -type f 2>/dev/null | sort | head -n1)
+    if [[ -z "$xml_file" ]]; then
+        echo ""
+    else
+        echo "$xml_file"
+    fi
+}
+
+DETECTION_MODEL=$(find_model_xml "$DETECTION_MODEL_DIR")
+OCR_MODEL=$(find_model_xml "$OCR_MODEL_DIR")
 
 # Default video: smart parking scene from Pexels
 DEFAULT_VIDEO="https://videos.pexels.com/video-files/3014296/3014296-hd_1920_1080_24fps.mp4"
@@ -108,17 +125,17 @@ echo "Detection:  $DETECTION_MODEL"
 echo "OCR:        $OCR_MODEL"
 echo "============================================================"
 
-if [[ ! -f "$DETECTION_MODEL" ]]; then
+if [[ -z "$DETECTION_MODEL" ]] || [[ ! -f "$DETECTION_MODEL" ]]; then
     echo ""
-    echo "Warning: Detection model not found at: $DETECTION_MODEL"
-    echo "Please download models first. See README.md for instructions."
+    echo "Warning: Detection model not found in: $DETECTION_MODEL_DIR"
+    echo "Please run v2_sample_app/convert_models.py first. See README.md for instructions."
     echo ""
 fi
 
-if [[ ! -f "$OCR_MODEL" ]]; then
+if [[ -z "$OCR_MODEL" ]] || [[ ! -f "$OCR_MODEL" ]]; then
     echo ""
-    echo "Warning: OCR model not found at: $OCR_MODEL"
-    echo "Please download models first. See README.md for instructions."
+    echo "Warning: OCR model not found in: $OCR_MODEL_DIR"
+    echo "Please run v2_sample_app/convert_models.py first. See README.md for instructions."
     echo ""
 fi
 
