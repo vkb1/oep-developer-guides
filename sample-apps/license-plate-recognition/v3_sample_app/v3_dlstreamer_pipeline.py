@@ -496,11 +496,15 @@ def create_stream_comparison(
             axes[i, 2].legend()
             axes[i, 2].grid(True, alpha=0.3)
 
+    title = "V3: DL Streamer Pipeline - Smart Parking"
+    if total_time > 0:
+        title += (
+            f"\nTotal: {total_frames} frames in {total_time:.1f}s "
+            f"(Avg FPS: {total_frames / total_time:.1f})"
+        )
+
     plt.suptitle(
-        f"V3: DL Streamer Pipeline - Smart Parking\n"
-        f"Total: {total_frames} frames in {total_time:.1f}s "
-        f"(Avg FPS: {total_frames / total_time:.1f})" if total_time > 0 else
-        "V3: DL Streamer Pipeline - Smart Parking",
+        title,
         fontsize=16,
         fontweight="bold",
         y=1.02,
