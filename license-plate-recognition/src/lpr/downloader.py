@@ -79,7 +79,12 @@ def download_ocr_dictionary(models_dir: str = config.DEFAULT_MODELS_DIR) -> str:
 
     os.makedirs(dict_dir, exist_ok=True)
     logger.info("Downloading OCR dictionary ...")
-    urllib.request.urlretrieve(config.OCR_DICT_URL, dict_path)  # noqa: S310
+
+    # Validate URL scheme before downloading
+    url = config.OCR_DICT_URL
+    if not url.startswith("https://"):
+        raise ValueError(f"OCR dictionary URL must use HTTPS: {url}")
+    urllib.request.urlretrieve(url, dict_path)  # noqa: S310
     logger.info("OCR dictionary downloaded to %s", dict_path)
     return dict_path
 

@@ -98,6 +98,7 @@ def run(
     input_path: str,
     models_dir: str = config.DEFAULT_MODELS_DIR,
     output_dir: str = config.DEFAULT_OUTPUT_DIR,
+    device: str = config.DEFAULT_DEVICE,
 ) -> dict:
     """Run Stage 1: license plate detection and OCR with natively loaded models.
 
@@ -105,6 +106,7 @@ def run(
         input_path: Path to input image.
         models_dir: Directory containing downloaded models.
         output_dir: Directory for saving output.
+        device: Inference device for OpenVINO compilation (default: CPU).
 
     Returns:
         Dictionary with detection results, OCR text, and timing information.
@@ -143,7 +145,7 @@ def run(
     logger.info("Loading OCR model (PaddlePaddle format): %s", ocr_model_path)
     core = ov.Core()
     ocr_model = core.read_model(ocr_model_path)
-    compiled_ocr = core.compile_model(ocr_model, "CPU")
+    compiled_ocr = core.compile_model(ocr_model, device)
 
     all_texts = []
     total_ocr_time_ms = 0.0

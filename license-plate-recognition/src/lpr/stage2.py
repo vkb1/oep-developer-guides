@@ -93,6 +93,7 @@ def _run_ov_detection(
     model_path: str,
     image: np.ndarray,
     conf: float = config.DETECTION_CONFIDENCE,
+    device: str = config.DEFAULT_DEVICE,
 ) -> tuple[np.ndarray, list[tuple[int, int, int, int, float]], float]:
     """Run license plate detection using OpenVINO IR model.
 
@@ -100,6 +101,7 @@ def _run_ov_detection(
         model_path: Path to the detection IR .xml file.
         image: Input image (BGR).
         conf: Confidence threshold for detections.
+        device: OpenVINO inference device.
 
     Returns:
         Tuple of (annotated_image, list_of_boxes, inference_time_ms).
@@ -107,7 +109,7 @@ def _run_ov_detection(
     """
     core = ov.Core()
     model = core.read_model(model_path)
-    compiled = core.compile_model(model, "CPU")
+    compiled = core.compile_model(model, device)
 
     input_layer = compiled.input(0)
     _, c, h, w = input_layer.shape
@@ -255,6 +257,7 @@ def run(
     input_path: str,
     models_dir: str = config.DEFAULT_MODELS_DIR,
     output_dir: str = config.DEFAULT_OUTPUT_DIR,
+    device: str = config.DEFAULT_DEVICE,
 ) -> dict:
     """Run Stage 2: license plate detection and OCR with OpenVINO IR models.
 
@@ -262,6 +265,7 @@ def run(
         input_path: Path to input image.
         models_dir: Directory containing downloaded models.
         output_dir: Directory for saving output.
+        device: OpenVINO inference device (default: CPU).
 
     Returns:
         Dictionary with detection results, OCR text, and timing information.
@@ -283,7 +287,7 @@ def run(
 
     # --- Detection with OpenVINO ---
     detection_image, det_boxes, detection_time_ms = _run_ov_detection(
-        det_ir_path, input_image
+        det_ir_path, input_image, device=device
     )
     logger.info("Detection: found %d plates in %.1f ms", len(det_boxes), detection_time_ms)
 
@@ -291,7 +295,7 @@ def run(
     characters = _load_ocr_dictionary(dict_path)
     core = ov.Core()
     ocr_model = core.read_model(ocr_ir_path)
-    compiled_ocr = core.compile_model(ocr_model, "CPU")
+    compiled_ocr = core.compile_model(ocr_model, device)
 
     all_texts = []
     total_ocr_time_ms = 0.0

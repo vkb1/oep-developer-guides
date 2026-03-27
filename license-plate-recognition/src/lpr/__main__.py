@@ -102,6 +102,7 @@ def main() -> None:
             input_path=args.input,
             models_dir=args.models_dir,
             output_dir=args.output_dir,
+            device=args.device,
         )
 
     elif args.stage == 2:
@@ -111,6 +112,7 @@ def main() -> None:
             input_path=args.input,
             models_dir=args.models_dir,
             output_dir=args.output_dir,
+            device=args.device,
         )
 
     elif args.stage == 3:

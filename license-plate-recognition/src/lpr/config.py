@@ -34,3 +34,6 @@ DEFAULT_VIDEO_URL = (
     "https://github.com/open-edge-platform/edge-ai-resources/raw/main/videos/ParkingVideo.mp4"
 )
 DEFAULT_DEVICE = "CPU"
+
+# Pipeline timeout (seconds) for Stage 3
+PIPELINE_TIMEOUT_SECONDS = 300

@@ -235,7 +235,7 @@ def run(
             shell=True,
             capture_output=True,
             text=True,
-            timeout=300,
+            timeout=config.PIPELINE_TIMEOUT_SECONDS,
         )
         elapsed_s = time.perf_counter() - start_time
 
@@ -247,7 +247,9 @@ def run(
             logger.info("FPS not reported by pipeline; elapsed time: %.1f s", elapsed_s)
 
     except subprocess.TimeoutExpired:
-        logger.warning("Pipeline timed out after 300 seconds")
+        logger.warning(
+            "Pipeline timed out after %d seconds", config.PIPELINE_TIMEOUT_SECONDS
+        )
         fps = 0.0
         combined_output = ""
 
