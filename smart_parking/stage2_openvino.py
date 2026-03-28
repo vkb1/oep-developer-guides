@@ -109,7 +109,7 @@ def convert_ppocr_to_openvino(
         model = core.read_model(str(inference_model))
         ov.save_model(model, str(output_dir / "ppocr_rec.xml"))
         logger.info("PP-OCR model converted to OpenVINO IR at %s", output_dir)
-    except Exception:
+    except (RuntimeError, ValueError):
         logger.warning(
             "Could not convert PP-OCR model with OpenVINO directly. "
             "PP-OCR will use PaddlePaddle backend for OCR.",

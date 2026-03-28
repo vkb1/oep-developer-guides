@@ -30,6 +30,13 @@ from smart_parking.visualization import (
     draw_detections,
 )
 
+# Interval for running OCR (every N-th frame) to maintain performance
+OCR_FRAME_INTERVAL = 10
+# Frame index to capture as a representative sample for comparison output
+SAMPLE_FRAME_INDEX = 30
+# Log progress every N frames
+LOG_INTERVAL = 50
+
 logger = logging.getLogger(__name__)
 
 
@@ -214,8 +221,8 @@ def _process_video_opencv(
 
         annotated = draw_detections(frame, detections)
 
-        # OCR on detected plates (every 10th frame to keep performance)
-        if detections and frame_count % 10 == 0:
+        # Run OCR periodically to avoid per-frame overhead
+        if detections and frame_count % OCR_FRAME_INTERVAL == 0:
             crops = _crop_plates(frame, detections)
             if use_openvino_ocr:
                 texts, ocr_time = _recognize_with_openvino(crops)
@@ -241,15 +248,15 @@ def _process_video_opencv(
 
         writer.write(annotated)
 
-        # Capture sample frames for comparison
-        if frame_count == min(30, process_limit - 1):
+        # Capture a representative frame for the comparison figure
+        if frame_count == min(SAMPLE_FRAME_INDEX, process_limit - 1):
             sample_input = frame.copy()
             sample_output = annotated.copy()
 
         frame_count += 1
 
-        if frame_count % 50 == 0:
-            avg_fps = sum(fps_values[-50:]) / min(50, len(fps_values))
+        if frame_count % LOG_INTERVAL == 0:
+            avg_fps = sum(fps_values[-LOG_INTERVAL:]) / min(LOG_INTERVAL, len(fps_values))
             logger.info(
                 "Processed %d/%d frames (avg FPS: %.1f)",
                 frame_count,
@@ -268,7 +275,7 @@ def _process_video_opencv(
             input_frame=sample_input,
             output_frame=sample_output,
             fps=avg_fps,
-            frame_number=min(30, frame_count - 1),
+            frame_number=min(SAMPLE_FRAME_INDEX, frame_count - 1),
             output_path=output_dir / "video_comparison.png",
         )
 
