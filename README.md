@@ -26,6 +26,7 @@ oep-developer-guides/
 │   ├── stage1_inference.py      # Stage 1: native YOLO + PaddleOCR
 │   ├── stage2_openvino.py       # Stage 2: OpenVINO IR conversion & inference
 │   └── stage3_dlstreamer.py     # Stage 3: DL Streamer / OpenCV pipeline
+├── download_models.py           # Standalone script to download HuggingFace models
 ├── requirements.txt             # Python dependencies
 ├── README.md
 └── LICENSE
@@ -116,6 +117,29 @@ options:
   --max-frames N          Max frames for video processing (0 = all)
   -v, --verbose           Enable debug logging
 ```
+
+### Download Models
+
+You can pre-download all required models before running any stage using the
+standalone `download_models.py` script:
+
+```bash
+# Download all models (YOLO + PP-OCR)
+python download_models.py
+
+# Download only the YOLO license plate detection model
+python download_models.py --yolo-only
+
+# Download only the PP-OCR recognition model
+python download_models.py --ppocr-only
+
+# Download to a custom directory
+python download_models.py --models-dir ./my_models
+```
+
+Models are downloaded from:
+- **YOLO**: [morsetechlab/yolov11-license-plate-detection](https://huggingface.co/morsetechlab/yolov11-license-plate-detection)
+- **PP-OCR**: [PaddlePaddle/PP-OCRv4_server_rec](https://huggingface.co/PaddlePaddle/PP-OCRv4_server_rec)
 
 ### Typical Workflow
 
