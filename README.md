@@ -133,6 +133,12 @@ python download_models.py --yolo-only
 
 # Download only the PP-OCR recognition model
 python download_models.py --ppocr-only
+
+# Download all models and convert to OpenVINO IR format
+python download_models.py --convert-openvino
+
+# Download only YOLO and convert to OpenVINO IR
+python download_models.py --yolo-only --convert-openvino
 ```
 
 Models are downloaded from:

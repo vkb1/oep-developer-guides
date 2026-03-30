@@ -6,6 +6,9 @@ Downloads the following models:
   - PP-OCRv4 Server Recognition from
     https://huggingface.co/PaddlePaddle/PP-OCRv4_server_rec
 
+Optionally converts downloaded models to OpenVINO IR format when the
+``--convert-openvino`` flag is provided.
+
 Models are saved to the top-level ``models/`` directory as configured in
 ``smart_parking.config``.
 
@@ -13,6 +16,7 @@ Usage:
     python download_models.py
     python download_models.py --yolo-only
     python download_models.py --ppocr-only
+    python download_models.py --convert-openvino
 """
 
 import argparse
@@ -130,6 +134,11 @@ def main(argv: list[str] | None = None) -> int:
         help="Download only the PP-OCR recognition model.",
     )
     parser.add_argument(
+        "--convert-openvino",
+        action="store_true",
+        help="Convert downloaded models to OpenVINO IR format after downloading.",
+    )
+    parser.add_argument(
         "-v",
         "--verbose",
         action="store_true",
@@ -159,6 +168,40 @@ def main(argv: list[str] | None = None) -> int:
             logger.info("PP-OCR model ready at: %s", ppocr_dir)
 
         logger.info("All requested models downloaded successfully.")
+
+        if args.convert_openvino:
+            try:
+                from smart_parking.stage2_openvino import (
+                    convert_ppocr_to_openvino,
+                    convert_yolo_to_openvino,
+                )
+            except ImportError:
+                logger.error(
+                    "OpenVINO dependencies are not installed. "
+                    "Install openvino and ultralytics to use --convert-openvino."
+                )
+                return 1
+
+            logger.info("Converting models to OpenVINO IR format ...")
+
+            if do_yolo:
+                ov_yolo_xml = convert_yolo_to_openvino()
+                if ov_yolo_xml and ov_yolo_xml.exists():
+                    logger.info("OpenVINO YOLO model ready at: %s", ov_yolo_xml)
+                else:
+                    logger.error("YOLO OpenVINO IR conversion failed.")
+                    return 1
+
+            if do_ppocr:
+                ov_ppocr_dir = convert_ppocr_to_openvino()
+                if ov_ppocr_dir and ov_ppocr_dir.exists():
+                    logger.info("OpenVINO PP-OCR model ready at: %s", ov_ppocr_dir)
+                else:
+                    logger.error("PP-OCR OpenVINO IR conversion failed.")
+                    return 1
+
+            logger.info("OpenVINO IR conversion complete.")
+
         return 0
 
     except Exception:
