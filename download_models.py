@@ -6,9 +6,11 @@ Downloads the following models:
   - PP-OCRv4 Server Recognition from
     https://huggingface.co/PaddlePaddle/PP-OCRv4_server_rec
 
+Models are saved to the top-level ``models/`` directory as configured in
+``smart_parking.config``.
+
 Usage:
     python download_models.py
-    python download_models.py --models-dir ./my_models
     python download_models.py --yolo-only
     python download_models.py --ppocr-only
 """
@@ -18,35 +20,35 @@ import logging
 import sys
 from pathlib import Path
 
-# --- Default Configuration ---
-YOLO_REPO = "morsetechlab/yolov11-license-plate-detection"
-YOLO_FILENAME = "yolov11-license-plate-detection.pt"
-
-PPOCR_REPO = "PaddlePaddle/PP-OCRv4_server_rec"
-
-DEFAULT_MODELS_DIR = Path(__file__).resolve().parent / "models"
+from smart_parking.config import (
+    MODELS_DIR,
+    PPOCR_MODEL_DIR,
+    PPOCR_REC_REPO,
+    YOLO_LP_DETECTION_FILENAME,
+    YOLO_LP_DETECTION_REPO,
+    YOLO_MODEL_PATH,
+    ensure_directories,
+)
 
 logger = logging.getLogger(__name__)
 
 
 def download_yolo_model(
-    repo_id: str = YOLO_REPO,
-    filename: str = YOLO_FILENAME,
-    models_dir: Path = DEFAULT_MODELS_DIR,
+    repo_id: str = YOLO_LP_DETECTION_REPO,
+    filename: str = YOLO_LP_DETECTION_FILENAME,
+    output_path: Path = YOLO_MODEL_PATH,
 ) -> Path:
     """Download the YOLOv11 license plate detection model.
 
     Args:
         repo_id: HuggingFace repository ID.
         filename: Model filename to download.
-        models_dir: Base directory for storing models.
+        output_path: Local path to save the downloaded model.
 
     Returns:
         Path to the downloaded model file.
     """
-    output_dir = models_dir / "yolo"
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / filename
+    ensure_directories()
 
     if output_path.exists():
         logger.info("YOLO model already exists at %s", output_path)
@@ -60,7 +62,7 @@ def download_yolo_model(
     downloaded_path = hf_hub_download(
         repo_id=repo_id,
         filename=filename,
-        local_dir=str(output_dir),
+        local_dir=str(output_path.parent),
     )
     downloaded = Path(downloaded_path)
 
@@ -72,20 +74,19 @@ def download_yolo_model(
 
 
 def download_ppocr_model(
-    repo_id: str = PPOCR_REPO,
-    models_dir: Path = DEFAULT_MODELS_DIR,
+    repo_id: str = PPOCR_REC_REPO,
+    output_dir: Path = PPOCR_MODEL_DIR,
 ) -> Path:
     """Download the PP-OCRv4 server recognition model.
 
     Args:
         repo_id: HuggingFace repository ID.
-        models_dir: Base directory for storing models.
+        output_dir: Local directory to save the downloaded model.
 
     Returns:
         Path to the downloaded model directory.
     """
-    output_dir = models_dir / "ppocr"
-    output_dir.mkdir(parents=True, exist_ok=True)
+    ensure_directories()
 
     marker = output_dir / ".download_complete"
     if marker.exists():
@@ -119,12 +120,6 @@ def main(argv: list[str] | None = None) -> int:
         description="Download HuggingFace models for Smart Parking application."
     )
     parser.add_argument(
-        "--models-dir",
-        type=str,
-        default=str(DEFAULT_MODELS_DIR),
-        help=f"Directory to store downloaded models (default: {DEFAULT_MODELS_DIR}).",
-    )
-    parser.add_argument(
         "--yolo-only",
         action="store_true",
         help="Download only the YOLO license plate detection model.",
@@ -149,17 +144,18 @@ def main(argv: list[str] | None = None) -> int:
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    models_dir = Path(args.models_dir)
-    download_yolo = not args.ppocr_only
-    download_ppocr = not args.yolo_only
+    logger.info("Models directory: %s", MODELS_DIR)
+
+    do_yolo = not args.ppocr_only
+    do_ppocr = not args.yolo_only
 
     try:
-        if download_yolo:
-            yolo_path = download_yolo_model(models_dir=models_dir)
+        if do_yolo:
+            yolo_path = download_yolo_model()
             logger.info("YOLO model ready at: %s", yolo_path)
 
-        if download_ppocr:
-            ppocr_dir = download_ppocr_model(models_dir=models_dir)
+        if do_ppocr:
+            ppocr_dir = download_ppocr_model()
             logger.info("PP-OCR model ready at: %s", ppocr_dir)
 
         logger.info("All requested models downloaded successfully.")

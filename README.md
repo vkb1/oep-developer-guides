@@ -121,7 +121,8 @@ options:
 ### Download Models
 
 You can pre-download all required models before running any stage using the
-standalone `download_models.py` script:
+standalone `download_models.py` script. Models are saved to the top-level
+`models/` directory as configured in `smart_parking/config.py`.
 
 ```bash
 # Download all models (YOLO + PP-OCR)
@@ -132,9 +133,6 @@ python download_models.py --yolo-only
 
 # Download only the PP-OCR recognition model
 python download_models.py --ppocr-only
-
-# Download to a custom directory
-python download_models.py --models-dir ./my_models
 ```
 
 Models are downloaded from:
