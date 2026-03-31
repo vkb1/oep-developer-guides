@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import shlex
 import subprocess
 import sys
 import time
@@ -240,7 +241,7 @@ def _build_text_panel(
     ]
     for i, (det, txt) in enumerate(zip(detections, texts)):
         lines.append(
-            f"  [{i}] \"{txt}\"  conf={det['conf']:.2f}"
+            f"  [{i}] '{txt}'  conf={det['conf']:.2f}"
         )
         lines.append(
             f"      bbox=({det['x1']}, {det['y1']}, {det['x2']}, {det['y2']})"
@@ -396,7 +397,7 @@ def _dlstreamer_available() -> bool:
         return False
     try:
         result = subprocess.run(
-            f"source {dls_script} && which gst-launch-1.0",
+            f"source {shlex.quote(str(dls_script))} && which gst-launch-1.0",
             shell=True,
             executable="/bin/bash",
             capture_output=True,
@@ -425,7 +426,7 @@ def _run_dlstreamer_pipeline(
     ocr_model_arg = ""
     if ppocr_xml.exists():
         ocr_model_arg = (
-            f" ! gvaclassify model={ppocr_xml} model-proc='' device=CPU"
+            f" ! gvaclassify model={shlex.quote(str(ppocr_xml))} model-proc='' device=CPU"
         )
 
     phase3_dir = OUTPUT_DIR / "phase3"
@@ -433,9 +434,9 @@ def _run_dlstreamer_pipeline(
 
     pipeline = (
         f"gst-launch-1.0 "
-        f"filesrc location={video_path} ! decodebin ! videoconvert ! "
+        f"filesrc location={shlex.quote(str(video_path))} ! decodebin ! videoconvert ! "
         f"video/x-raw,format=BGRx ! "
-        f"gvadetect model={ov_xml} device=CPU threshold={confidence} ! "
+        f"gvadetect model={shlex.quote(str(ov_xml))} device=CPU threshold={confidence} ! "
         f"queue"
         f"{ocr_model_arg} ! "
         f"gvafpscounter ! fakesink"
