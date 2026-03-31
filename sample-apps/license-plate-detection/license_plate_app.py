@@ -64,6 +64,7 @@ VALID_SIZES = ("v1n", "v1s", "v1m", "v1l", "v1x")
 DEFAULT_SIZE = "v1m"
 DEFAULT_CONFIDENCE = 0.25
 OCR_FRAME_INTERVAL = 10  # Phase 3 fallback: run OCR every N frames
+DLS_ENV_SCRIPT = "/opt/intel/dlstreamer/scripts/setup_dls_env.sh"
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -163,11 +164,11 @@ def _ocr(
             continue
         # PaddleOCR expects RGB
         rgb = cv2.cvtColor(crop, cv2.COLOR_BGR2RGB)
-        for res in ocr_engine.predict(rgb):
-            rec_texts = res.get("rec_texts", [])
+        results = list(ocr_engine.predict(rgb))
+        if results:
+            rec_texts = results[0].get("rec_texts", [])
             plate_text = " ".join(rec_texts).strip()
             texts.append(plate_text)
-            break  # single image → first result only
         else:
             texts.append("")
     elapsed_ms = (time.perf_counter() - t0) * 1000
@@ -392,7 +393,7 @@ def run_phase2(
 # ═══════════════════════════════════════════════════════════════════════════
 def _dlstreamer_available() -> bool:
     """Check whether gst-launch-1.0 and DL Streamer env script exist."""
-    dls_script = Path("/opt/intel/dlstreamer/scripts/setup_dls_env.sh")
+    dls_script = Path(DLS_ENV_SCRIPT)
     if not dls_script.exists():
         return False
     try:
@@ -442,7 +443,7 @@ def _run_dlstreamer_pipeline(
         f"gvafpscounter ! fakesink"
     )
 
-    dls_setup = "source /opt/intel/dlstreamer/scripts/setup_dls_env.sh"
+    dls_setup = f"source {shlex.quote(DLS_ENV_SCRIPT)}"
     shell_cmd = f"{dls_setup} && {pipeline}"
     log.info("DL Streamer pipeline:\n  %s", pipeline)
 
@@ -525,7 +526,8 @@ def _run_opencv_fallback(
         elif detections:
             # Use previous OCR results for annotating
             last_detections = detections
-            if not last_texts:
+            # Ensure texts list matches detections length for zip safety
+            if len(last_texts) != len(detections):
                 last_texts = [""] * len(detections)
 
         frame_idx += 1
