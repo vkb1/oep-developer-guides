@@ -1,3 +1,7 @@
+# Model weights and output (downloaded / generated at runtime)
+sample-apps/license-plate-detection/models/
+sample-apps/license-plate-detection/output/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
