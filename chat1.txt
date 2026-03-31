@@ -1,0 +1,2237 @@
+User: Create a python application to read the yolo and ocr model from models directory to come up with an integrated license plate application showing the input image, detection image and inference numbers.
+
+GitHub Copilot: 
+
+ 
+
+Created 4 todos
+
+Explore full codebase structure
+
+Read [](file:///home/vinod/repos/oep-developer-guides/models/PaddlePaddle_PP-OCRv4_server_rec)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/models/morsetechlab_yolov11-license-plate-detection)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/models/morsetechlab_yolov11-license-plate-detection/models_ov)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/data)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/config.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/stage2_openvino.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/download_and_convert_openvino.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/download_models.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/requirements.txt)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/main.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/stage1_inference.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/stage3_dlstreamer.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/model_manager.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/visualization.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/__init__.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/README.md)
+
+Starting: *Understand existing smart_parking modules* (2/4)
+
+Let me read the key files in detail to understand the exact APIs and model paths.   
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/config.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/stage1_inference.py#1-1), lines 1 to 200
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/visualization.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/data)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/models/PaddlePaddle_PP-OCRv4_server_rec)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/stage1_inference.py#155-155), lines 155 to 210
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/main.py#1-1), lines 1 to 100
+
+Read [](file:///home/vinod/repos/oep-developer-guides/models/morsetechlab_yolov11-license-plate-detection/models_ov/license-plate-finetune-v1m_openvino_model)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/stage1_inference.py#205-205), lines 205 to 240
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/model_manager.py#1-1), lines 1 to 80
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/stage1_inference.py#238-238), lines 238 to 244
+
+Read [](file:///home/vinod/repos/oep-developer-guides/models/morsetechlab_yolov11-license-plate-detection/models_ov/license-plate-finetune-v1m_openvino_model/metadata.yaml#1-1), lines 1 to 10
+
+Starting: *Build integrated license plate app* (3/4)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/stage2_openvino.py#1-1), lines 1 to 150
+
+Now I have a clear picture. Let me create the integrated application that directly uses the models already in the models directory. 
+
+Created [](file:///home/vinod/repos/oep-developer-guides/license_plate_app.py)
+
+Starting: *Test the application* (4/4)
+
+Now let me check if there's any test image available, and verify there are no errors:  
+
+Checked [](file:///home/vinod/repos/oep-developer-guides/license_plate_app.py), no problems found
+
+Searched for files matching `**/*.{jpg,jpeg,png,bmp}`, no matches
+
+No test images exist. Let me do a dry-run validation to make sure imports resolve correctly: 
+
+Ran terminal command:  cd /home/vinod/repos/oep-developer-guides && python -c "
+from license_plate_app import get_yolo_model_path, VALID_MODEL_SIZES, PPOCR_MODEL_DIR
+for size in VALID_MODEL_SIZES:
+    p = get_yolo_model_path(size)
+    print(f'{size}: {p} exists={p.exists()}')
+print(f'OCR dir: {PPOCR_MODEL_DIR} exists={PPOCR_MODEL_DIR.exists()}')
+"
+
+Made changes.
+
+User: Rewrite the license_plate_app.py to add the 3 phases:
+1. Phase1: Provided the image as input, use the default non optimized yolo or the paddle model from models directory to render the input image, annotated image and the OCR side by side comparision with the inference numbers.
+
+2. Phase 2: Provided the image as input, use the default openvino optimized yolo or the paddle model from models directory to render the input image, annotated image and the OCR side by side comparision with the inference numbers.
+ 
+ 3. Phase 3: Provided the input video, update the sample https://github.com/open-edge-platform/dlstreamer/tree/main/samples/gstreamer/gst_launch/license_plate_recognition to work with above OV models to be able to run the DL Streamer pipeline to render the input image, annotated image and the OCR side by side comparion with the inference numbers.
+
+GitHub Copilot: 
+
+ 
+
+Created 6 todos
+
+Read [](file:///home/vinod/repos/oep-developer-guides/license_plate_app.py#1-1), lines 1 to 200
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/config.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/stage2_openvino.py#1-1), lines 1 to 200
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/stage1_inference.py#1-1), lines 1 to 200
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/stage3_dlstreamer.py#1-1), lines 1 to 200
+
+Starting: *Read existing smart_parking modules* (2/6)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/stage1_inference.py#140-140), lines 140 to 200
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/stage2_openvino.py#160-160), lines 160 to 300
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/stage3_dlstreamer.py#180-180), lines 180 to 350
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/visualization.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/model_manager.py#1-1), lines 1 to 50
+
+Starting: *Read model directory structure* (3/6)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/license_plate_app.py#150-150), lines 150 to 300
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/main.py#1-1), lines 1 to 50
+
+Read [](file:///home/vinod/repos/oep-developer-guides/smart_parking/__init__.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/models/morsetechlab_yolov11-license-plate-detection)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/models/PaddlePaddle_PP-OCRv4_server_rec)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/license_plate_app.py#290-290), lines 290 to 350
+
+Read [](file:///home/vinod/repos/oep-developer-guides/models/morsetechlab_yolov11-license-plate-detection/models_ov)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/data)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/license_plate_app.py#340-340), lines 340 to 367
+
+Starting: *Check DLStreamer sample reference* (4/6)
+
+
+
+Fetched https://github.com/open-edge-platform/dlstreamer/tree/main/samples/gstreamer/gst_launch/license_plate_recognition
+
+
+
+Fetched https://raw.githubusercontent.com/open-edge-platform/dlstreamer/main/samples/gstreamer/gst_launch/license_plate_recognition/license_plate_recognition.sh
+
+Starting: *Rewrite license_plate_app.py with 3 phases* (5/6)
+
+Now I have full context. Let me rewrite the application with all 3 phases. 
+
+Created [](file:///home/vinod/repos/oep-developer-guides/license_plate_app.py)
+
+Read [](file:///home/vinod/repos/oep-developer-guides/license_plate_app.py#1-1), lines 1 to 5
+
+I'll write the full file content via the terminal since `replace_string_in_file` can't handle full-file rewrites efficiently: 
+
+Ran terminal command:  cat > /home/vinod/repos/oep-developer-guides/license_plate_app.py << 'ENDOFFILE'
+"""Integrated License Plate Detection & Recognition Application.
+
+Three execution phases:
+  Phase 1: Native YOLO .pt + PaddleOCR (non-optimized) on an image
+  Phase 2: OpenVINO IR YOLO + PaddleOCR on an image (optimized)
+  Phase 3: DL Streamer GStreamer pipeline on video
+
+Usage:
+    python license_plate_app.py --phase 1 --input image.jpg
+    python license_plate_app.py --phase 2 --input image.jpg --device CPU
+    python license_plate_app.py --phase 3 --input video.mp4 --device CPU
+    python license_plate_app.py --phase all --input image.jpg --video video.mp4
+"""
+
+import argparse
+import logging
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+import cv2
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+
+matplotlib.use("Agg")
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%H:%M:%S",
+)
+logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Paths
+# ---------------------------------------------------------------------------
+PROJECT_ROOT = Path(__file__).resolve().parent
+MODELS_DIR = PROJECT_ROOT / "models"
+YOLO_BASE = MODELS_DIR / "morsetechlab_yolov11-license-plate-detection"
+PPOCR_DIR = MODELS_DIR / "PaddlePaddle_PP-OCRv4_server_rec"
+OUTPUT_DIR = PROJECT_ROOT / "output"
+
+VALID_SIZES = ["v1n", "v1s", "v1m", "v1l", "v1x"]
+DEFAULT_SIZE = "v1m"
+
+
+def _yolo_pt_path(size: str = DEFAULT_SIZE) -> Path:
+    p = YOLO_BASE / f"license-plate-finetune-{size}.pt"
+    if not p.exists():
+        raise FileNotFoundError(f"YOLO .pt model not found: {p}")
+    return p
+
+
+def _yolo_ov_path(size: str = DEFAULT_SIZE) -> Path:
+    stem = f"license-plate-finetune-{size}"
+    p = YOLO_BASE / "models_ov" / f"{stem}_openvino_model" / f"{stem}.xml"
+    if not p.exists():
+        raise FileNotFoundError(f"YOLO OpenVINO model not found: {p}")
+    return p
+
+
+def _ppocr_ov_xml() -> Path:
+    return PPOCR_DIR / "pp_ocrv4_server_rec.xml"
+
+
+# ---------------------------------------------------------------------------
+# Detection helpers
+# ---------------------------------------------------------------------------
+def _detect(model, image: np.ndarray, confidence: float, iou: float = 0.45):
+    """Run YOLO detection; return (detections_list, elapsed_ms)."""
+    start = time.perf_counter()
+    results = model.predict(image, conf=confidence, iou=iou, verbose=False)
+    elapsed = (time.perf_counter() - start) * 1000
+
+    dets = []
+    for r in results:
+        if r.boxes is None:
+            continue
+        for box in r.boxes:
+            x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
+            dets.append({
+                "bbox": [float(x1), float(y1), float(x2), float(y2)],
+                "confidence": float(box.conf[0].cpu().numpy()),
+                "label": r.names.get(int(box.cls[0].cpu().numpy()), "plate"),
+            })
+    return dets, elapsed
+
+
+def _crop_plates(image: np.ndarray, dets: list[dict], pad: int = 5):
+    h, w = image.shape[:2]
+    crops = []
+    for d in dets:
+        x1, y1, x2, y2 = (int(c) for c in d["bbox"])
+        x1, y1 = max(0, x1 - pad), max(0, y1 - pad)
+        x2, y2 = min(w, x2 + pad), min(h, y2 + pad)
+        c = image[y1:y2, x1:x2]
+        if c.size > 0:
+            crops.append(c)
+    return crops
+
+
+def _ocr(crops: list[np.ndarray]):
+    """PaddleOCR on crops; return (texts, elapsed_ms)."""
+    from paddleocr import PaddleOCR
+    ocr = PaddleOCR(use_angle_cls=True, lang="en", show_log=False)
+
+    texts = []
+    start = time.perf_counter()
+    for crop in crops:
+        rgb = cv2.cvtColor(crop, cv2.COLOR_BGR2RGB)
+        result = ocr.ocr(rgb, cls=True)
+        plate = ""
+        if result and result[0]:
+            for line in result[0]:
+                if line and len(line) >= 2:
+                    t = line[1][0] if isinstance(line[1], (list, tuple)) else str(line[1])
+                    plate += t + " "
+        texts.append(plate.strip() if plate.strip() else "[unreadable]")
+    elapsed = (time.perf_counter() - start) * 1000
+    return texts, elapsed
+
+
+# ---------------------------------------------------------------------------
+# Drawing
+# ---------------------------------------------------------------------------
+def _draw(image: np.ndarray, dets: list[dict],
+          color=(0, 255, 0), thickness=2) -> np.ndarray:
+    out = image.copy()
+    for d in dets:
+        x1, y1, x2, y2 = (int(c) for c in d["bbox"])
+        cv2.rectangle(out, (x1, y1), (x2, y2), color, thickness)
+        txt = f"{d['label']} {d['confidence']:.2f}"
+        (tw, th), _ = cv2.getTextSize(txt, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1)
+        cv2.rectangle(out, (x1, y1 - th - 8), (x1 + tw + 4, y1), color, -1)
+        cv2.putText(out, txt, (x1 + 2, y1 - 4),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 1)
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Visualization -- 3-panel figure
+# ---------------------------------------------------------------------------
+def _make_figure(original, annotated, dets, texts, times, title, out_path):
+    """Create and save a 3-panel comparison figure."""
+    orig_rgb = cv2.cvtColor(original, cv2.COLOR_BGR2RGB)
+    ann_rgb = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
+
+    fig, axes = plt.subplots(1, 3, figsize=(20, 7), dpi=100)
+    fig.suptitle(title, fontsize=15, fontweight="bold")
+
+    axes[0].imshow(orig_rgb)
+    axes[0].set_title("Input Image", fontsize=12)
+    axes[0].axis("off")
+
+    axes[1].imshow(ann_rgb)
+    axes[1].set_title(f"Detection ({times['det_ms']:.1f} ms)", fontsize=12)
+    axes[1].axis("off")
+
+    lines = [
+        "Inference Results",
+        "=" * 34,
+        "",
+        f"Plates detected : {len(dets)}",
+        f"Detection time  : {times['det_ms']:.1f} ms",
+        f"OCR time        : {times['ocr_ms']:.1f} ms",
+        f"Total time      : {times['total_ms']:.1f} ms",
+        "",
+        "-" * 34,
+        "Recognized Plates:",
+        "-" * 34,
+    ]
+    if texts:
+        for i, t in enumerate(texts, 1):
+            conf = dets[i - 1]["confidence"] if i <= len(dets) else 0
+            lines += [f"  #{i}  {t}", f"       conf: {conf:.2f}"]
+    else:
+        lines.append("  No plates detected")
+    lines += ["", "-" * 34]
+    for d in dets:
+        b = d["bbox"]
+        lines.append(f"  Box: ({b[0]:.0f},{b[1]:.0f})-({b[2]:.0f},{b[3]:.0f})")
+
+    axes[2].text(0.5, 0.5, "\n".join(lines),
+                 transform=axes[2].transAxes, fontsize=11,
+                 va="center", ha="center", fontfamily="monospace",
+                 bbox={"boxstyle": "round,pad=0.6",
+                       "facecolor": "lightyellow", "alpha": 0.9})
+    axes[2].set_title("Inference Numbers", fontsize=12)
+    axes[2].axis("off")
+
+    plt.tight_layout()
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(str(out_path), bbox_inches="tight", dpi=100)
+    plt.close(fig)
+    logger.info("Figure saved -> %s", out_path)
+    return out_path
+
+
+def _make_video_figure(inp_frame, ann_frame, avg_fps, frame_no,
+                       unique_texts, times, out_path):
+    """Create a 3-panel figure for a representative video frame."""
+    inp_rgb = cv2.cvtColor(inp_frame, cv2.COLOR_BGR2RGB)
+    ann_rgb = cv2.cvtColor(ann_frame, cv2.COLOR_BGR2RGB)
+
+    fig, axes = plt.subplots(1, 3, figsize=(20, 7), dpi=100)
+    fig.suptitle("Phase 3 -- DL Streamer / Video Pipeline", fontsize=15,
+                 fontweight="bold")
+
+    axes[0].imshow(inp_rgb)
+    axes[0].set_title(f"Input Frame #{frame_no}", fontsize=12)
+    axes[0].axis("off")
+
+    axes[1].imshow(ann_rgb)
+    axes[1].set_title("Annotated Frame", fontsize=12)
+    axes[1].axis("off")
+
+    lines = [
+        "Video Inference Results",
+        "=" * 34,
+        "",
+        f"Avg FPS         : {avg_fps:.1f}",
+        f"Avg det/frame   : {times['avg_det_ms']:.1f} ms",
+        f"Total OCR time  : {times['total_ocr_ms']:.1f} ms",
+        f"Frames processed: {times['frames']}",
+        "",
+        "-" * 34,
+        "Unique Plates Seen:",
+        "-" * 34,
+    ]
+    if unique_texts:
+        for i, t in enumerate(unique_texts, 1):
+            lines.append(f"  #{i}  {t}")
+    else:
+        lines.append("  None")
+
+    axes[2].text(0.5, 0.5, "\n".join(lines),
+                 transform=axes[2].transAxes, fontsize=11,
+                 va="center", ha="center", fontfamily="monospace",
+                 bbox={"boxstyle": "round,pad=0.6",
+                       "facecolor": "lightyellow", "alpha": 0.9})
+    axes[2].set_title("Inference Numbers", fontsize=12)
+    axes[2].axis("off")
+
+    plt.tight_layout()
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(str(out_path), bbox_inches="tight", dpi=100)
+    plt.close(fig)
+    logger.info("Video figure saved -> %s", out_path)
+    return out_path
+
+
+# ---------------------------------------------------------------------------
+# Phase 1: Native .pt YOLO + PaddleOCR (non-optimized)
+# ---------------------------------------------------------------------------
+def run_phase1(input_image: str, confidence: float = 0.5,
+               model_size: str = DEFAULT_SIZE,
+               output: str | None = None) -> dict:
+    """Phase 1 -- native YOLO .pt model + PaddleOCR on a single image."""
+    from ultralytics import YOLO
+
+    pt_path = _yolo_pt_path(model_size)
+    logger.info("[Phase 1] YOLO .pt : %s", pt_path)
+    logger.info("[Phase 1] OCR dir  : %s", PPOCR_DIR)
+
+    img = cv2.imread(str(input_image))
+    if img is None:
+        raise ValueError(f"Cannot read image: {input_image}")
+    logger.info("[Phase 1] Image %s (%dx%d)", Path(input_image).name,
+                img.shape[1], img.shape[0])
+
+    total_start = time.perf_counter()
+
+    model = YOLO(str(pt_path))
+    dets, det_ms = _detect(model, img, confidence)
+    annotated = _draw(img, dets)
+    crops = _crop_plates(img, dets)
+    texts, ocr_ms = _ocr(crops)
+    total_ms = (time.perf_counter() - total_start) * 1000
+
+    times = {"det_ms": det_ms, "ocr_ms": ocr_ms, "total_ms": total_ms}
+
+    out_dir = OUTPUT_DIR / "phase1"
+    stem = Path(input_image).stem
+    out_path = Path(output) if output else out_dir / f"{stem}_phase1.png"
+
+    _make_figure(img, annotated, dets, texts, times,
+                 "Phase 1 -- Native YOLO + PaddleOCR (non-optimized)", out_path)
+
+    _print_summary("Phase 1", dets, texts, times, out_path)
+    return {"detections": dets, "texts": texts, "times": times,
+            "output": str(out_path)}
+
+
+# ---------------------------------------------------------------------------
+# Phase 2: OpenVINO-optimized YOLO + PaddleOCR
+# ---------------------------------------------------------------------------
+def run_phase2(input_image: str, confidence: float = 0.5,
+               model_size: str = DEFAULT_SIZE, device: str = "CPU",
+               output: str | None = None) -> dict:
+    """Phase 2 -- OpenVINO IR YOLO model + PaddleOCR on a single image."""
+    from ultralytics import YOLO
+
+    ov_path = _yolo_ov_path(model_size)
+    logger.info("[Phase 2] YOLO OV : %s", ov_path)
+    logger.info("[Phase 2] OCR dir : %s", PPOCR_DIR)
+
+    img = cv2.imread(str(input_image))
+    if img is None:
+        raise ValueError(f"Cannot read image: {input_image}")
+    logger.info("[Phase 2] Image %s (%dx%d)", Path(input_image).name,
+                img.shape[1], img.shape[0])
+
+    total_start = time.perf_counter()
+
+    model = YOLO(str(ov_path))
+    dets, det_ms = _detect(model, img, confidence)
+    annotated = _draw(img, dets, color=(255, 165, 0))
+    crops = _crop_plates(img, dets)
+    texts, ocr_ms = _ocr(crops)
+    total_ms = (time.perf_counter() - total_start) * 1000
+
+    times = {"det_ms": det_ms, "ocr_ms": ocr_ms, "total_ms": total_ms}
+
+    out_dir = OUTPUT_DIR / "phase2"
+    stem = Path(input_image).stem
+    out_path = Path(output) if output else out_dir / f"{stem}_phase2.png"
+
+    _make_figure(img, annotated, dets, texts, times,
+                 f"Phase 2 -- OpenVINO Optimized ({device})", out_path)
+
+    _print_summary("Phase 2", dets, texts, times, out_path)
+    return {"detections": dets, "texts": texts, "times": times,
+            "output": str(out_path)}
+
+
+# ---------------------------------------------------------------------------
+# Phase 3: DL Streamer pipeline (video)
+# ---------------------------------------------------------------------------
+OCR_FRAME_INTERVAL = 10
+SAMPLE_FRAME_INDEX = 30
+
+
+def _gstreamer_available() -> bool:
+    try:
+        r = subprocess.run(["gst-launch-1.0", "--version"],
+                           capture_output=True, text=True, timeout=10)
+        return r.returncode == 0
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return False
+
+
+def _build_dlstreamer_pipeline(input_video: str, detection_model: str,
+                               ocr_model: str | None, device: str,
+                               output_mode: str = "fps") -> str:
+    """Build a DL Streamer pipeline string adapted from the
+    open-edge-platform/dlstreamer license_plate_recognition sample."""
+
+    # Source element
+    if input_video.startswith("/dev/video"):
+        source = f"v4l2src device={input_video}"
+    elif "://" in input_video:
+        source = f"urisourcebin buffer-size=4096 uri={input_video}"
+    else:
+        source = f"filesrc location={input_video}"
+
+    # Decode / pre-process
+    if device == "GPU":
+        decode = "decodebin3 ! vapostproc ! video/x-raw(memory:VAMemory)"
+        preproc = "pre-process-backend=va-surface-sharing"
+    else:
+        decode = "decodebin3"
+        preproc = "pre-process-backend=opencv"
+
+    # Detect + classify
+    detect = (f"gvadetect model={detection_model} device={device} "
+              f"{preproc}")
+    classify = ""
+    if ocr_model:
+        classify = (f"! queue ! videoconvert ! "
+                    f"gvaclassify model={ocr_model} device={device} "
+                    f"{preproc}")
+
+    # Sink
+    if output_mode == "display":
+        sink = ("vapostproc ! gvawatermark ! videoconvert ! "
+                "gvafpscounter ! autovideosink")
+    elif output_mode == "json":
+        sink = ("gvametaconvert ! gvametapublish file-format=json-lines "
+                "file-path=output.json ! fakesink async=false")
+    else:  # fps
+        sink = "gvafpscounter ! fakesink async=false"
+
+    parts = [
+        f"gst-launch-1.0 {source}",
+        f"! {decode}",
+        f"! queue ! {detect}",
+    ]
+    if classify:
+        parts.append(classify)
+    parts.append(f"! queue ! {sink}")
+
+    return " ".join(parts)
+
+
+def _run_video_opencv(input_video: str, model, confidence: float,
+                      max_frames: int, out_dir: Path) -> dict:
+    """Fallback: process video frame-by-frame with OpenCV + YOLO + OCR."""
+    cap = cv2.VideoCapture(input_video)
+    if not cap.isOpened():
+        raise ValueError(f"Cannot open video: {input_video}")
+
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
+    w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    logger.info("Video %s %dx%d %.1f FPS %d frames",
+                input_video, w, h, fps, total_frames)
+
+    out_vid = out_dir / "annotated_output.mp4"
+    writer = cv2.VideoWriter(str(out_vid),
+                             cv2.VideoWriter_fourcc(*"mp4v"), fps, (w, h))
+
+    limit = max_frames if max_frames > 0 else total_frames
+    count = 0
+    total_det = 0.0
+    total_ocr = 0.0
+    all_texts: list[str] = []
+    fps_vals: list[float] = []
+    sample_in = sample_out = None
+
+    while cap.isOpened() and count < limit:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        t0 = time.perf_counter()
+        dets, dt = _detect(model, frame, confidence)
+        total_det += dt
+        annotated = _draw(frame, dets)
+
+        if dets and count % OCR_FRAME_INTERVAL == 0:
+            crops = _crop_plates(frame, dets)
+            texts, ot = _ocr(crops)
+            total_ocr += ot
+            all_texts.extend(texts)
+
+        frame_ms = (time.perf_counter() - t0) * 1000
+        cur_fps = 1000.0 / frame_ms if frame_ms > 0 else 0
+        fps_vals.append(cur_fps)
+
+        cv2.putText(annotated, f"FPS: {cur_fps:.1f}", (10, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2)
+        writer.write(annotated)
+
+        if count == min(SAMPLE_FRAME_INDEX, limit - 1):
+            sample_in = frame.copy()
+            sample_out = annotated.copy()
+
+        count += 1
+        if count % 50 == 0:
+            logger.info("Processed %d/%d frames", count, limit)
+
+    cap.release()
+    writer.release()
+
+    avg_fps = sum(fps_vals) / len(fps_vals) if fps_vals else 0
+    unique = sorted(set(all_texts) - {"[unreadable]"})
+
+    times_info = {
+        "avg_det_ms": total_det / max(count, 1),
+        "total_ocr_ms": total_ocr,
+        "frames": count,
+    }
+
+    if sample_in is not None and sample_out is not None:
+        fig_path = out_dir / "video_comparison.png"
+        _make_video_figure(sample_in, sample_out, avg_fps,
+                           min(SAMPLE_FRAME_INDEX, count - 1),
+                           unique, times_info, fig_path)
+
+    logger.info("Video done: %d frames, avg FPS %.1f", count, avg_fps)
+    return {"frames": count, "avg_fps": avg_fps, "unique_plates": unique,
+            "output_video": str(out_vid),
+            "comparison": str(out_dir / "video_comparison.png")}
+
+
+def run_phase3(input_video: str, confidence: float = 0.5,
+               model_size: str = DEFAULT_SIZE, device: str = "CPU",
+               output_mode: str = "fps", max_frames: int = 0,
+               output: str | None = None) -> dict:
+    """Phase 3 -- DL Streamer pipeline (or OpenCV fallback) on video."""
+    from ultralytics import YOLO
+
+    ov_det = _yolo_ov_path(model_size)
+    ov_ocr = _ppocr_ov_xml() if _ppocr_ov_xml().exists() else None
+    out_dir = Path(output) if output else OUTPUT_DIR / "phase3"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    if not Path(input_video).exists():
+        raise FileNotFoundError(f"Input video not found: {input_video}")
+
+    use_dls = _gstreamer_available()
+
+    if use_dls:
+        logger.info("[Phase 3] DL Streamer available -- building pipeline")
+        pipeline = _build_dlstreamer_pipeline(
+            input_video, str(ov_det),
+            str(ov_ocr) if ov_ocr else None,
+            device, output_mode)
+        logger.info("Pipeline:\n  %s", pipeline)
+
+        start = time.perf_counter()
+        result = subprocess.run(
+            pipeline.split(),
+            capture_output=True, text=True, timeout=600)
+        duration = time.perf_counter() - start
+
+        if result.returncode != 0:
+            logger.warning("DL Streamer failed (rc=%d), falling back to OpenCV",
+                           result.returncode)
+            use_dls = False
+        else:
+            logger.info("DL Streamer finished in %.1f s", duration)
+            print(result.stdout[-2000:] if len(result.stdout) > 2000
+                  else result.stdout)
+            return {"pipeline": pipeline, "duration_s": duration,
+                    "stdout": result.stdout, "stderr": result.stderr}
+
+    if not use_dls:
+        logger.info("[Phase 3] Using OpenCV fallback pipeline")
+        model = YOLO(str(ov_det))
+        return _run_video_opencv(input_video, model, confidence,
+                                 max_frames, out_dir)
+
+
+# ---------------------------------------------------------------------------
+# Console summary
+# ---------------------------------------------------------------------------
+def _print_summary(phase: str, dets, texts, times, out_path):
+    print(f"\n{'=' * 44}")
+    print(f"  {phase} -- License Plate Results")
+    print(f"{'=' * 44}")
+    print(f"  Plates found  : {len(dets)}")
+    print(f"  Detection     : {times['det_ms']:.1f} ms")
+    print(f"  OCR           : {times['ocr_ms']:.1f} ms")
+    print(f"  Total         : {times['total_ms']:.1f} ms")
+    if texts:
+        print(f"  {'-' * 40}")
+        for i, t in enumerate(texts, 1):
+            print(f"  Plate #{i}: {t}")
+    print(f"{'=' * 44}")
+    print(f"  Output: {out_path}\n")
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+def main():
+    parser = argparse.ArgumentParser(
+        description="License Plate Detection & Recognition -- 3 Phases",
+    )
+    parser.add_argument(
+        "--phase", required=True,
+        choices=["1", "2", "3", "all"],
+        help="Phase to run: 1 (native), 2 (OpenVINO), 3 (DL Streamer), all",
+    )
+    parser.add_argument("--input", help="Path to input image (phases 1/2)")
+    parser.add_argument("--video", help="Path to input video (phase 3)")
+    parser.add_argument("--confidence", type=float, default=0.5)
+    parser.add_argument("--model-size", choices=VALID_SIZES,
+                        default=DEFAULT_SIZE)
+    parser.add_argument("--device", default="CPU",
+                        help="OpenVINO device (CPU, GPU, AUTO)")
+    parser.add_argument("--output-mode", default="fps",
+                        choices=["display", "fps", "json"],
+                        help="DL Streamer output mode (phase 3)")
+    parser.add_argument("--max-frames", type=int, default=0,
+                        help="Max video frames to process (0=all)")
+    parser.add_argument("--output", default=None,
+                        help="Custom output path")
+    args = parser.parse_args()
+
+    phases = [args.phase] if args.phase != "all" else ["1", "2", "3"]
+
+    for phase in phases:
+        try:
+            if phase in ("1", "2"):
+                if not args.input:
+                    parser.error(f"--input required for phase {phase}")
+                if phase == "1":
+                    run_phase1(args.input, args.confidence,
+                               args.model_size, args.output)
+                else:
+                    run_phase2(args.input, args.confidence,
+                               args.model_size, args.device, args.output)
+            elif phase == "3":
+                video = args.video or args.input
+                if not video:
+                    parser.error("--video (or --input) required for phase 3")
+                run_phase3(video, args.confidence, args.model_size,
+                           args.device, args.output_mode,
+                           args.max_frames, args.output)
+        except Exception as e:
+            logger.error("Phase %s failed: %s", phase, e)
+            if len(phases) == 1:
+                sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
+ENDOFFILE
+
+Starting: *Validate and test* (6/6)
+
+Ran terminal command:  cd /home/vinod/repos/oep-developer-guides && python -c "import license_plate_app; print('Import OK')"
+
+User: Update this and its references to have 2 sets of OpenVINO and non OpenVINO base constants and use it accordingly in phase 2 and phase 1 respectively
+
+GitHub Copilot: 
+
+ 
+
+Read [](file:///home/vinod/repos/oep-developer-guides/license_plate_app.py#1-1), lines 1 to 70
+
+Read [](file:///home/vinod/repos/oep-developer-guides/license_plate_app.py#230-230), lines 230 to 310
+
+I see the file still has the old single-phase content. The `cat` heredoc from the earlier terminal likely didn't format correctly (all on one line). Let me check to confirm and then rewrite it properly. 
+
+Ran terminal command:  wc -l /home/vinod/repos/oep-developer-guides/license_plate_app.py
+
+The file has 367 lines — that's the original single-phase version. I need to rewrite it with the 3 phases and the two separate base constants. Let me use a Python script to write the file to avoid heredoc formatting issues. 
+
+Ran terminal command:  python3 -c "
+import pathlib
+content = '''\"\"\"Integrated License Plate Detection & Recognition Application.
+
+Three execution phases:
+  Phase 1: Native YOLO .pt + PaddleOCR (non-optimized) on an image
+  Phase 2: OpenVINO IR YOLO + PaddleOCR on an image (optimized)
+  Phase 3: DL Streamer GStreamer pipeline on video
+
+Usage:
+    python license_plate_app.py --phase 1 --input image.jpg
+    python license_plate_app.py --phase 2 --input image.jpg --device CPU
+    python license_plate_app.py --phase 3 --input video.mp4 --device CPU
+    python license_plate_app.py --phase all --input image.jpg --video video.mp4
+\"\"\"
+
+import argparse
+import logging
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+import cv2
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+
+matplotlib.use(\"Agg\")
+
+logging.basicConfig(
+    level=logging.INFO,
+    format=\"%(asctime)s [%(levelname)s] %(message)s\",
+    datefmt=\"%H:%M:%S\",
+)
+logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Paths
+# ---------------------------------------------------------------------------
+PROJECT_ROOT = Path(__file__).resolve().parent
+MODELS_DIR = PROJECT_ROOT / \"models\"
+OUTPUT_DIR = PROJECT_ROOT / \"output\"
+
+# --- Non-optimized (native .pt) base path  (Phase 1) ---
+YOLO_NATIVE_BASE = MODELS_DIR / \"morsetechlab_yolov11-license-plate-detection\"
+
+# --- OpenVINO-optimized base path  (Phase 2 / 3) ---
+YOLO_OV_BASE = (
+    MODELS_DIR
+    / \"morsetechlab_yolov11-license-plate-detection\"
+    / \"models_ov\"
+)
+
+PPOCR_MODEL_DIR = MODELS_DIR / \"PaddlePaddle_PP-OCRv4_server_rec\"
+
+VALID_MODEL_SIZES = [\"v1n\", \"v1s\", \"v1m\", \"v1l\", \"v1x\"]
+DEFAULT_MODEL_SIZE = \"v1m\"
+
+
+def _yolo_pt_path(size: str = DEFAULT_MODEL_SIZE) -> Path:
+    \"\"\"Return path to the native YOLO .pt model (Phase 1).\"\"\"
+    p = YOLO_NATIVE_BASE / f\"license-plate-finetune-{size}.pt\"
+    if not p.exists():
+        raise FileNotFoundError(
+            f\"YOLO .pt model not found at {p}.\\n\"
+            f\"Available sizes: {VALID_MODEL_SIZES}\"
+        )
+    return p
+
+
+def _yolo_ov_path(size: str = DEFAULT_MODEL_SIZE) -> Path:
+    \"\"\"Return path to the OpenVINO IR YOLO .xml model (Phase 2/3).\"\"\"
+    stem = f\"license-plate-finetune-{size}\"
+    p = YOLO_OV_BASE / f\"{stem}_openvino_model\" / f\"{stem}.xml\"
+    if not p.exists():
+        raise FileNotFoundError(
+            f\"YOLO OpenVINO model not found at {p}.\\n\"
+            f\"Available sizes: {VALID_MODEL_SIZES}\"
+        )
+    return p
+
+
+def _ppocr_ov_xml() -> Path:
+    return PPOCR_MODEL_DIR / \"pp_ocrv4_server_rec.xml\"
+
+
+# ---------------------------------------------------------------------------
+# Detection helpers
+# ---------------------------------------------------------------------------
+def _detect(model, image, confidence: float, iou: float = 0.45):
+    \"\"\"Run YOLO detection; return (detections_list, elapsed_ms).\"\"\"
+    start = time.perf_counter()
+    results = model.predict(image, conf=confidence, iou=iou, verbose=False)
+    elapsed = (time.perf_counter() - start) * 1000
+
+    dets = []
+    for r in results:
+        if r.boxes is None:
+            continue
+        for box in r.boxes:
+            x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
+            dets.append({
+                \"bbox\": [float(x1), float(y1), float(x2), float(y2)],
+                \"confidence\": float(box.conf[0].cpu().numpy()),
+                \"label\": r.names.get(int(box.cls[0].cpu().numpy()), \"plate\"),
+            })
+    return dets, elapsed
+
+
+def _crop_plates(image, dets: list[dict], pad: int = 5):
+    h, w = image.shape[:2]
+    crops = []
+    for d in dets:
+        x1, y1, x2, y2 = (int(c) for c in d[\"bbox\"])
+        x1, y1 = max(0, x1 - pad), max(0, y1 - pad)
+        x2, y2 = min(w, x2 + pad), min(h, y2 + pad)
+        c = image[y1:y2, x1:x2]
+        if c.size > 0:
+            crops.append(c)
+    return crops
+
+
+def _ocr(crops: list):
+    \"\"\"PaddleOCR on crops; return (texts, elapsed_ms).\"\"\"
+    from paddleocr import PaddleOCR
+    ocr = PaddleOCR(use_textline_orientation=True, lang=\"en\")
+
+    texts = []
+    start = time.perf_counter()
+    for crop in crops:
+        rgb = cv2.cvtColor(crop, cv2.COLOR_BGR2RGB)
+        result = ocr.ocr(rgb, cls=True)
+        plate = \"\"
+        if result and result[0]:
+            for line in result[0]:
+                if line and len(line) >= 2:
+                    t = line[1][0] if isinstance(line[1], (list, tuple)) else str(line[1])
+                    plate += t + \" \"
+        texts.append(plate.strip() if plate.strip() else \"[unreadable]\")
+    elapsed = (time.perf_counter() - start) * 1000
+    return texts, elapsed
+
+
+# ---------------------------------------------------------------------------
+# Drawing
+# ---------------------------------------------------------------------------
+def _draw(image, dets: list[dict], color=(0, 255, 0), thickness=2):
+    out = image.copy()
+    for d in dets:
+        x1, y1, x2, y2 = (int(c) for c in d[\"bbox\"])
+        cv2.rectangle(out, (x1, y1), (x2, y2), color, thickness)
+        txt = f\"{d[\\\"label\\\"]} {d[\\\"confidence\\\"]:.2f}\"
+        (tw, th), _ = cv2.getTextSize(txt, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1)
+        cv2.rectangle(out, (x1, y1 - th - 8), (x1 + tw + 4, y1), color, -1)
+        cv2.putText(out, txt, (x1 + 2, y1 - 4),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 1)
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Visualization -- 3-panel figure
+# ---------------------------------------------------------------------------
+def _make_figure(original, annotated, dets, texts, times, title, out_path):
+    \"\"\"Create and save a 3-panel comparison figure.\"\"\"
+    orig_rgb = cv2.cvtColor(original, cv2.COLOR_BGR2RGB)
+    ann_rgb = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
+
+    fig, axes = plt.subplots(1, 3, figsize=(20, 7), dpi=100)
+    fig.suptitle(title, fontsize=15, fontweight=\"bold\")
+
+    axes[0].imshow(orig_rgb)
+    axes[0].set_title(\"Input Image\", fontsize=12)
+    axes[0].axis(\"off\")
+
+    axes[1].imshow(ann_rgb)
+    axes[1].set_title(f\"Detection ({times[\\\"det_ms\\\"]:.1f} ms)\", fontsize=12)
+    axes[1].axis(\"off\")
+
+    lines = [
+        \"Inference Results\",
+        \"=\" * 34,
+        \"\",
+        f\"Plates detected : {len(dets)}\",
+        f\"Detection time  : {times[\\\"det_ms\\\"]:.1f} ms\",
+        f\"OCR time        : {times[\\\"ocr_ms\\\"]:.1f} ms\",
+        f\"Total time      : {times[\\\"total_ms\\\"]:.1f} ms\",
+        \"\",
+        \"-\" * 34,
+        \"Recognized Plates:\",
+        \"-\" * 34,
+    ]
+    if texts:
+        for i, t in enumerate(texts, 1):
+            conf = dets[i - 1][\"confidence\"] if i <= len(dets) else 0
+            lines += [f\"  #{i}  {t}\", f\"       conf: {conf:.2f}\"]
+    else:
+        lines.append(\"  No plates detected\")
+    lines += [\"\", \"-\" * 34]
+    for d in dets:
+        b = d[\"bbox\"]
+        lines.append(f\"  Box: ({b[0]:.0f},{b[1]:.0f})-({b[2]:.0f},{b[3]:.0f})\")
+
+    axes[2].text(0.5, 0.5, \"\\n\".join(lines),
+                 transform=axes[2].transAxes, fontsize=11,
+                 va=\"center\", ha=\"center\", fontfamily=\"monospace\",
+                 bbox={\"boxstyle\": \"round,pad=0.6\",
+                       \"facecolor\": \"lightyellow\", \"alpha\": 0.9})
+    axes[2].set_title(\"Inference Numbers\", fontsize=12)
+    axes[2].axis(\"off\")
+
+    plt.tight_layout()
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(str(out_path), bbox_inches=\"tight\", dpi=100)
+    plt.close(fig)
+    logger.info(\"Figure saved -> %s\", out_path)
+    return out_path
+
+
+def _make_video_figure(inp_frame, ann_frame, avg_fps, frame_no,
+                       unique_texts, times, out_path):
+    \"\"\"Create a 3-panel figure for a representative video frame.\"\"\"
+    inp_rgb = cv2.cvtColor(inp_frame, cv2.COLOR_BGR2RGB)
+    ann_rgb = cv2.cvtColor(ann_frame, cv2.COLOR_BGR2RGB)
+
+    fig, axes = plt.subplots(1, 3, figsize=(20, 7), dpi=100)
+    fig.suptitle(\"Phase 3 -- DL Streamer / Video Pipeline\", fontsize=15,
+                 fontweight=\"bold\")
+
+    axes[0].imshow(inp_rgb)
+    axes[0].set_title(f\"Input Frame #{frame_no}\", fontsize=12)
+    axes[0].axis(\"off\")
+
+    axes[1].imshow(ann_rgb)
+    axes[1].set_title(\"Annotated Frame\", fontsize=12)
+    axes[1].axis(\"off\")
+
+    lines = [
+        \"Video Inference Results\",
+        \"=\" * 34,
+        \"\",
+        f\"Avg FPS         : {avg_fps:.1f}\",
+        f\"Avg det/frame   : {times[\\\"avg_det_ms\\\"]:.1f} ms\",
+        f\"Total OCR time  : {times[\\\"total_ocr_ms\\\"]:.1f} ms\",
+        f\"Frames processed: {times[\\\"frames\\\"]}\",
+        \"\",
+        \"-\" * 34,
+        \"Unique Plates Seen:\",
+        \"-\" * 34,
+    ]
+    if unique_texts:
+        for i, t in enumerate(unique_texts, 1):
+            lines.append(f\"  #{i}  {t}\")
+    else:
+        lines.append(\"  None\")
+
+    axes[2].text(0.5, 0.5, \"\\n\".join(lines),
+                 transform=axes[2].transAxes, fontsize=11,
+                 va=\"center\", ha=\"center\", fontfamily=\"monospace\",
+                 bbox={\"boxstyle\": \"round,pad=0.6\",
+                       \"facecolor\": \"lightyellow\", \"alpha\": 0.9})
+    axes[2].set_title(\"Inference Numbers\", fontsize=12)
+    axes[2].axis(\"off\")
+
+    plt.tight_layout()
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(str(out_path), bbox_inches=\"tight\", dpi=100)
+    plt.close(fig)
+    logger.info(\"Video figure saved -> %s\", out_path)
+    return out_path
+
+
+# ---------------------------------------------------------------------------
+# Phase 1: Native .pt YOLO + PaddleOCR (non-optimized)
+# ---------------------------------------------------------------------------
+def run_phase1(input_image: str, confidence: float = 0.5,
+               model_size: str = DEFAULT_MODEL_SIZE,
+               output: str | None = None) -> dict:
+    \"\"\"Phase 1 -- native YOLO .pt model + PaddleOCR on a single image.\"\"\"
+    from ultralytics import YOLO
+
+    pt_path = _yolo_pt_path(model_size)
+    logger.info(\"[Phase 1] YOLO .pt  : %s  (from YOLO_NATIVE_BASE)\", pt_path)
+    logger.info(\"[Phase 1] OCR dir   : %s\", PPOCR_MODEL_DIR)
+
+    img = cv2.imread(str(input_image))
+    if img is None:
+        raise ValueError(f\"Cannot read image: {input_image}\")
+    logger.info(\"[Phase 1] Image %s (%dx%d)\", Path(input_image).name,
+                img.shape[1], img.shape[0])
+
+    total_start = time.perf_counter()
+
+    model = YOLO(str(pt_path))
+    dets, det_ms = _detect(model, img, confidence)
+    annotated = _draw(img, dets)
+    crops = _crop_plates(img, dets)
+    texts, ocr_ms = _ocr(crops)
+    total_ms = (time.perf_counter() - total_start) * 1000
+
+    times = {\"det_ms\": det_ms, \"ocr_ms\": ocr_ms, \"total_ms\": total_ms}
+
+    out_dir = OUTPUT_DIR / \"phase1\"
+    stem = Path(input_image).stem
+    out_path = Path(output) if output else out_dir / f\"{stem}_phase1.png\"
+
+    _make_figure(img, annotated, dets, texts, times,
+                 \"Phase 1 -- Native YOLO + PaddleOCR (non-optimized)\", out_path)
+
+    _print_summary(\"Phase 1\", dets, texts, times, out_path)
+    return {\"detections\": dets, \"texts\": texts, \"times\": times,
+            \"output\": str(out_path)}
+
+
+# ---------------------------------------------------------------------------
+# Phase 2: OpenVINO-optimized YOLO + PaddleOCR
+# ---------------------------------------------------------------------------
+def run_phase2(input_image: str, confidence: float = 0.5,
+               model_size: str = DEFAULT_MODEL_SIZE, device: str = \"CPU\",
+               output: str | None = None) -> dict:
+    \"\"\"Phase 2 -- OpenVINO IR YOLO model + PaddleOCR on a single image.\"\"\"
+    from ultralytics import YOLO
+
+    ov_path = _yolo_ov_path(model_size)
+    logger.info(\"[Phase 2] YOLO OV   : %s  (from YOLO_OV_BASE)\", ov_path)
+    logger.info(\"[Phase 2] OCR dir   : %s\", PPOCR_MODEL_DIR)
+
+    img = cv2.imread(str(input_image))
+    if img is None:
+        raise ValueError(f\"Cannot read image: {input_image}\")
+    logger.info(\"[Phase 2] Image %s (%dx%d)\", Path(input_image).name,
+                img.shape[1], img.shape[0])
+
+    total_start = time.perf_counter()
+
+    model = YOLO(str(ov_path), task=\"detect\")
+    dets, det_ms = _detect(model, img, confidence)
+    annotated = _draw(img, dets, color=(255, 165, 0))
+    crops = _crop_plates(img, dets)
+    texts, ocr_ms = _ocr(crops)
+    total_ms = (time.perf_counter() - total_start) * 1000
+
+    times = {\"det_ms\": det_ms, \"ocr_ms\": ocr_ms, \"total_ms\": total_ms}
+
+    out_dir = OUTPUT_DIR / \"phase2\"
+    stem = Path(input_image).stem
+    out_path = Path(output) if output else out_dir / f\"{stem}_phase2.png\"
+
+    _make_figure(img, annotated, dets, texts, times,
+                 f\"Phase 2 -- OpenVINO Optimized ({device})\", out_path)
+
+    _print_summary(\"Phase 2\", dets, texts, times, out_path)
+    return {\"detections\": dets, \"texts\": texts, \"times\": times,
+            \"output\": str(out_path)}
+
+
+# ---------------------------------------------------------------------------
+# Phase 3: DL Streamer pipeline (video)
+# ---------------------------------------------------------------------------
+OCR_FRAME_INTERVAL = 10
+SAMPLE_FRAME_INDEX = 30
+
+
+def _gstreamer_available() -> bool:
+    try:
+        r = subprocess.run([\"gst-launch-1.0\", \"--version\"],
+                           capture_output=True, text=True, timeout=10)
+        return r.returncode == 0
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return False
+
+
+def _build_dlstreamer_pipeline(input_video: str, detection_model: str,
+                               ocr_model: str | None, device: str,
+                               output_mode: str = \"fps\") -> str:
+    \"\"\"Build a DL Streamer pipeline string adapted from the
+    open-edge-platform/dlstreamer license_plate_recognition sample.\"\"\"
+
+    # Source element
+    if input_video.startswith(\"/dev/video\"):
+        source = f\"v4l2src device={input_video}\"
+    elif \"://\" in input_video:
+        source = f\"urisourcebin buffer-size=4096 uri={input_video}\"
+    else:
+        source = f\"filesrc location={input_video}\"
+
+    # Decode / pre-process
+    if device == \"GPU\":
+        decode = \"decodebin3 ! vapostproc ! video/x-raw(memory:VAMemory)\"
+        preproc = \"pre-process-backend=va-surface-sharing\"
+    else:
+        decode = \"decodebin3\"
+        preproc = \"pre-process-backend=opencv\"
+
+    # Detect + classify
+    detect = (f\"gvadetect model={detection_model} device={device} \"
+              f\"{preproc}\")
+    classify = \"\"
+    if ocr_model:
+        classify = (f\"! queue ! videoconvert ! \"
+                    f\"gvaclassify model={ocr_model} device={device} \"
+                    f\"{preproc}\")
+
+    # Sink
+    if output_mode == \"display\":
+        sink = (\"vapostproc ! gvawatermark ! videoconvert ! \"
+                \"gvafpscounter ! autovideosink\")
+    elif output_mode == \"json\":
+        sink = (\"gvametaconvert ! gvametapublish file-format=json-lines \"
+                \"file-path=output.json ! fakesink async=false\")
+    else:  # fps
+        sink = \"gvafpscounter ! fakesink async=false\"
+
+    parts = [
+        f\"gst-launch-1.0 {source}\",
+        f\"! {decode}\",
+        f\"! queue ! {detect}\",
+    ]
+    if classify:
+        parts.append(classify)
+    parts.append(f\"! queue ! {sink}\")
+
+    return \" \".join(parts)
+
+
+def _run_video_opencv(input_video: str, model, confidence: float,
+                      max_frames: int, out_dir) -> dict:
+    \"\"\"Fallback: process video frame-by-frame with OpenCV + YOLO + OCR.\"\"\"
+    cap = cv2.VideoCapture(input_video)
+    if not cap.isOpened():
+        raise ValueError(f\"Cannot open video: {input_video}\")
+
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
+    w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    logger.info(\"Video %s %dx%d %.1f FPS %d frames\",
+                input_video, w, h, fps, total_frames)
+
+    out_vid = out_dir / \"annotated_output.mp4\"
+    writer = cv2.VideoWriter(str(out_vid),
+                             cv2.VideoWriter_fourcc(*\"mp4v\"), fps, (w, h))
+
+    limit = max_frames if max_frames > 0 else total_frames
+    count = 0
+    total_det = 0.0
+    total_ocr = 0.0
+    all_texts: list[str] = []
+    fps_vals: list[float] = []
+    sample_in = sample_out = None
+
+    while cap.isOpened() and count < limit:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        t0 = time.perf_counter()
+        dets, dt = _detect(model, frame, confidence)
+        total_det += dt
+        annotated = _draw(frame, dets)
+
+        if dets and count % OCR_FRAME_INTERVAL == 0:
+            crops = _crop_plates(frame, dets)
+            texts, ot = _ocr(crops)
+            total_ocr += ot
+            all_texts.extend(texts)
+
+        frame_ms = (time.perf_counter() - t0) * 1000
+        cur_fps = 1000.0 / frame_ms if frame_ms > 0 else 0
+        fps_vals.append(cur_fps)
+
+        cv2.putText(annotated, f\"FPS: {cur_fps:.1f}\", (10, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2)
+        writer.write(annotated)
+
+        if count == min(SAMPLE_FRAME_INDEX, limit - 1):
+            sample_in = frame.copy()
+            sample_out = annotated.copy()
+
+        count += 1
+        if count % 50 == 0:
+            logger.info(\"Processed %d/%d frames\", count, limit)
+
+    cap.release()
+    writer.release()
+
+    avg_fps = sum(fps_vals) / len(fps_vals) if fps_vals else 0
+    unique = sorted(set(all_texts) - {\"[unreadable]\"})
+
+    times_info = {
+        \"avg_det_ms\": total_det / max(count, 1),
+        \"total_ocr_ms\": total_ocr,
+        \"frames\": count,
+    }
+
+    if sample_in is not None and sample_out is not None:
+        fig_path = out_dir / \"video_comparison.png\"
+        _make_video_figure(sample_in, sample_out, avg_fps,
+                           min(SAMPLE_FRAME_INDEX, count - 1),
+                           unique, times_info, fig_path)
+
+    logger.info(\"Video done: %d frames, avg FPS %.1f\", count, avg_fps)
+    return {\"frames\": count, \"avg_fps\": avg_fps, \"unique_plates\": unique,
+            \"output_video\": str(out_vid),
+            \"comparison\": str(out_dir / \"video_comparison.png\")}
+
+
+def run_phase3(input_video: str, confidence: float = 0.5,
+               model_size: str = DEFAULT_MODEL_SIZE, device: str = \"CPU\",
+               output_mode: str = \"fps\", max_frames: int = 0,
+               output: str | None = None) -> dict:
+    \"\"\"Phase 3 -- DL Streamer pipeline (or OpenCV fallback) on video.
+
+    Uses YOLO_OV_BASE for the detection model (OpenVINO IR).\"\"\"
+    from ultralytics import YOLO
+
+    ov_det = _yolo_ov_path(model_size)
+    ov_ocr = _ppocr_ov_xml() if _ppocr_ov_xml().exists() else None
+    out_dir = Path(output) if output else OUTPUT_DIR / \"phase3\"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    if not Path(input_video).exists():
+        raise FileNotFoundError(f\"Input video not found: {input_video}\")
+
+    use_dls = _gstreamer_available()
+
+    if use_dls:
+        logger.info(\"[Phase 3] DL Streamer available -- building pipeline\")
+        pipeline = _build_dlstreamer_pipeline(
+            input_video, str(ov_det),
+            str(ov_ocr) if ov_ocr else None,
+            device, output_mode)
+        logger.info(\"Pipeline:\\n  %s\", pipeline)
+
+        start = time.perf_counter()
+        result = subprocess.run(
+            pipeline.split(),
+            capture_output=True, text=True, timeout=600)
+        duration = time.perf_counter() - start
+
+        if result.returncode != 0:
+            logger.warning(\"DL Streamer failed (rc=%d), falling back to OpenCV\",
+                           result.returncode)
+            use_dls = False
+        else:
+            logger.info(\"DL Streamer finished in %.1f s\", duration)
+            print(result.stdout[-2000:] if len(result.stdout) > 2000
+                  else result.stdout)
+            return {\"pipeline\": pipeline, \"duration_s\": duration,
+                    \"stdout\": result.stdout, \"stderr\": result.stderr}
+
+    if not use_dls:
+        logger.info(\"[Phase 3] Using OpenCV fallback pipeline\")
+        model = YOLO(str(ov_det))
+        return _run_video_opencv(input_video, model, confidence,
+                                 max_frames, out_dir)
+
+
+# ---------------------------------------------------------------------------
+# Console summary
+# ---------------------------------------------------------------------------
+def _print_summary(phase: str, dets, texts, times, out_path):
+    print(f\"\\n{\\\"=\\\" * 44}\")
+    print(f\"  {phase} -- License Plate Results\")
+    print(f\"{\\\"=\\\" * 44}\")
+    print(f\"  Plates found  : {len(dets)}\")
+    print(f\"  Detection     : {times[\\\"det_ms\\\"]:.1f} ms\")
+    print(f\"  OCR           : {times[\\\"ocr_ms\\\"]:.1f} ms\")
+    print(f\"  Total         : {times[\\\"total_ms\\\"]:.1f} ms\")
+    if texts:
+        print(f\"  {\\\"-\\\" * 40}\")
+        for i, t in enumerate(texts, 1):
+            print(f\"  Plate #{i}: {t}\")
+    print(f\"{\\\"=\\\" * 44}\")
+    print(f\"  Output: {out_path}\\n\")
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+def main():
+    parser = argparse.ArgumentParser(
+        description=\"License Plate Detection & Recognition -- 3 Phases\",
+    )
+    parser.add_argument(
+        \"--phase\", required=True,
+        choices=[\"1\", \"2\", \"3\", \"all\"],
+        help=\"Phase to run: 1 (native), 2 (OpenVINO), 3 (DL Streamer), all\",
+    )
+    parser.add_argument(\"--input\", help=\"Path to input image (phases 1/2)\")
+    parser.add_argument(\"--video\", help=\"Path to input video (phase 3)\")
+    parser.add_argument(\"--confidence\", type=float, default=0.5)
+    parser.add_argument(\"--model-size\", choices=VALID_MODEL_SIZES,
+                        default=DEFAULT_MODEL_SIZE)
+    parser.add_argument(\"--device\", default=\"CPU\",
+                        help=\"OpenVINO device (CPU, GPU, AUTO)\")
+    parser.add_argument(\"--output-mode\", default=\"fps\",
+                        choices=[\"display\", \"fps\", \"json\"],
+                        help=\"DL Streamer output mode (phase 3)\")
+    parser.add_argument(\"--max-frames\", type=int, default=0,
+                        help=\"Max video frames to process (0=all)\")
+    parser.add_argument(\"--output\", default=None,
+                        help=\"Custom output path\")
+    args = parser.parse_args()
+
+    phases = [args.phase] if args.phase != \"all\" else [\"1\", \"2\", \"3\"]
+
+    for phase in phases:
+        try:
+            if phase in (\"1\", \"2\"):
+                if not args.input:
+                    parser.error(f\"--input required for phase {phase}\")
+                if phase == \"1\":
+                    run_phase1(args.input, args.confidence,
+                               args.model_size, args.output)
+                else:
+                    run_phase2(args.input, args.confidence,
+                               args.model_size, args.device, args.output)
+            elif phase == \"3\":
+                video = args.video or args.input
+                if not video:
+                    parser.error(\"--video (or --input) required for phase 3\")
+                run_phase3(video, args.confidence, args.model_size,
+                           args.device, args.output_mode,
+                           args.max_frames, args.output)
+        except Exception as e:
+            logger.error(\"Phase %s failed: %s\", phase, e)
+            if len(phases) == 1:
+                sys.exit(1)
+
+
+if __name__ == \"__main__\":
+    main()
+'''
+pathlib.Path('/home/vinod/repos/oep-developer-guides/license_plate_app.py').write_text(content)
+print('Done -', len(content.splitlines()), 'lines')
+"
+
+
+Ran terminal command:  cd /home/vinod/repos/oep-developer-guides && python -c "import ast; ast.parse(open('license_plate_app.py').read()); print('Syntax OK')"
+Completed with input:  cd /home/vinod/repos/oep-developer-guides && python -c "import ast; ast.parse(open('license_plate_app.py').read()); print('Syntax OK')"
+
+Ran terminal command:  cd /home/vinod/repos/oep-developer-guides && python3 -c "import ast; ast.parse(open('license_plate_app.py').read()); print('Syntax OK')"
+Completed with input:  cd /home/vinod/repos/oep-developer-guides && python3 -c "import ast; ast.parse(open('license_plate_app.py').read()); print('Syntax OK')"
+
+The escaping in the triple-quoted string approach got mangled. Let me write the file directly instead: 
+
+Ran terminal command:  cd /home/vinod/repos/oep-developer-guides && python3 << 'PYEOF'
+content = r'''"""Integrated License Plate Detection & Recognition Application.
+
+Three execution phases:
+  Phase 1: Native YOLO .pt + PaddleOCR (non-optimized) on an image
+  Phase 2: OpenVINO IR YOLO + PaddleOCR on an image (optimized)
+  Phase 3: DL Streamer GStreamer pipeline on video
+
+Usage:
+    python license_plate_app.py --phase 1 --input image.jpg
+    python license_plate_app.py --phase 2 --input image.jpg --device CPU
+    python license_plate_app.py --phase 3 --input video.mp4 --device CPU
+    python license_plate_app.py --phase all --input image.jpg --video video.mp4
+"""
+
+import argparse
+import logging
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+import cv2
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+
+matplotlib.use("Agg")
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%H:%M:%S",
+)
+logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Paths
+# ---------------------------------------------------------------------------
+PROJECT_ROOT = Path(__file__).resolve().parent
+MODELS_DIR = PROJECT_ROOT / "models"
+OUTPUT_DIR = PROJECT_ROOT / "output"
+
+# --- Non-optimized (native .pt) base path  (Phase 1) ---
+YOLO_NATIVE_BASE = MODELS_DIR / "morsetechlab_yolov11-license-plate-detection"
+
+# --- OpenVINO-optimized base path  (Phase 2 / 3) ---
+YOLO_OV_BASE = (
+    MODELS_DIR
+    / "morsetechlab_yolov11-license-plate-detection"
+    / "models_ov"
+)
+
+PPOCR_MODEL_DIR = MODELS_DIR / "PaddlePaddle_PP-OCRv4_server_rec"
+
+VALID_MODEL_SIZES = ["v1n", "v1s", "v1m", "v1l", "v1x"]
+DEFAULT_MODEL_SIZE = "v1m"
+
+
+def _yolo_pt_path(size: str = DEFAULT_MODEL_SIZE) -> Path:
+    """Return path to the native YOLO .pt model (Phase 1)."""
+    p = YOLO_NATIVE_BASE / f"license-plate-finetune-{size}.pt"
+    if not p.exists():
+        raise FileNotFoundError(
+            f"YOLO .pt model not found at {p}.\n"
+            f"Available sizes: {VALID_MODEL_SIZES}"
+        )
+    return p
+
+
+def _yolo_ov_path(size: str = DEFAULT_MODEL_SIZE) -> Path:
+    """Return path to the OpenVINO IR YOLO .xml model (Phase 2/3)."""
+    stem = f"license-plate-finetune-{size}"
+    p = YOLO_OV_BASE / f"{stem}_openvino_model" / f"{stem}.xml"
+    if not p.exists():
+        raise FileNotFoundError(
+            f"YOLO OpenVINO model not found at {p}.\n"
+            f"Available sizes: {VALID_MODEL_SIZES}"
+        )
+    return p
+
+
+def _ppocr_ov_xml() -> Path:
+    return PPOCR_MODEL_DIR / "pp_ocrv4_server_rec.xml"
+
+
+# ---------------------------------------------------------------------------
+# Detection helpers
+# ---------------------------------------------------------------------------
+def _detect(model, image, confidence: float, iou: float = 0.45):
+    """Run YOLO detection; return (detections_list, elapsed_ms)."""
+    start = time.perf_counter()
+    results = model.predict(image, conf=confidence, iou=iou, verbose=False)
+    elapsed = (time.perf_counter() - start) * 1000
+
+    dets = []
+    for r in results:
+        if r.boxes is None:
+            continue
+        for box in r.boxes:
+            x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
+            dets.append({
+                "bbox": [float(x1), float(y1), float(x2), float(y2)],
+                "confidence": float(box.conf[0].cpu().numpy()),
+                "label": r.names.get(int(box.cls[0].cpu().numpy()), "plate"),
+            })
+    return dets, elapsed
+
+
+def _crop_plates(image, dets, pad=5):
+    h, w = image.shape[:2]
+    crops = []
+    for d in dets:
+        x1, y1, x2, y2 = (int(c) for c in d["bbox"])
+        x1, y1 = max(0, x1 - pad), max(0, y1 - pad)
+        x2, y2 = min(w, x2 + pad), min(h, y2 + pad)
+        c = image[y1:y2, x1:x2]
+        if c.size > 0:
+            crops.append(c)
+    return crops
+
+
+def _ocr(crops):
+    """PaddleOCR on crops; return (texts, elapsed_ms)."""
+    from paddleocr import PaddleOCR
+
+    ocr = PaddleOCR(use_textline_orientation=True, lang="en")
+
+    texts = []
+    start = time.perf_counter()
+    for crop in crops:
+        rgb = cv2.cvtColor(crop, cv2.COLOR_BGR2RGB)
+        result = ocr.ocr(rgb, cls=True)
+        plate = ""
+        if result and result[0]:
+            for line in result[0]:
+                if line and len(line) >= 2:
+                    t = line[1][0] if isinstance(line[1], (list, tuple)) else str(line[1])
+                    plate += t + " "
+        texts.append(plate.strip() if plate.strip() else "[unreadable]")
+    elapsed = (time.perf_counter() - start) * 1000
+    return texts, elapsed
+
+
+# ---------------------------------------------------------------------------
+# Drawing
+# ---------------------------------------------------------------------------
+def _draw(image, dets, color=(0, 255, 0), thickness=2):
+    out = image.copy()
+    for d in dets:
+        x1, y1, x2, y2 = (int(c) for c in d["bbox"])
+        cv2.rectangle(out, (x1, y1), (x2, y2), color, thickness)
+        txt = f"{d['label']} {d['confidence']:.2f}"
+        (tw, th), _ = cv2.getTextSize(txt, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1)
+        cv2.rectangle(out, (x1, y1 - th - 8), (x1 + tw + 4, y1), color, -1)
+        cv2.putText(out, txt, (x1 + 2, y1 - 4),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 1)
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Visualization -- 3-panel figure
+# ---------------------------------------------------------------------------
+def _make_figure(original, annotated, dets, texts, times, title, out_path):
+    """Create and save a 3-panel comparison figure."""
+    orig_rgb = cv2.cvtColor(original, cv2.COLOR_BGR2RGB)
+    ann_rgb = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
+
+    fig, axes = plt.subplots(1, 3, figsize=(20, 7), dpi=100)
+    fig.suptitle(title, fontsize=15, fontweight="bold")
+
+    axes[0].imshow(orig_rgb)
+    axes[0].set_title("Input Image", fontsize=12)
+    axes[0].axis("off")
+
+    axes[1].imshow(ann_rgb)
+    axes[1].set_title(f"Detection ({times['det_ms']:.1f} ms)", fontsize=12)
+    axes[1].axis("off")
+
+    lines = [
+        "Inference Results",
+        "=" * 34,
+        "",
+        f"Plates detected : {len(dets)}",
+        f"Detection time  : {times['det_ms']:.1f} ms",
+        f"OCR time        : {times['ocr_ms']:.1f} ms",
+        f"Total time      : {times['total_ms']:.1f} ms",
+        "",
+        "-" * 34,
+        "Recognized Plates:",
+        "-" * 34,
+    ]
+    if texts:
+        for i, t in enumerate(texts, 1):
+            conf = dets[i - 1]["confidence"] if i <= len(dets) else 0
+            lines += [f"  #{i}  {t}", f"       conf: {conf:.2f}"]
+    else:
+        lines.append("  No plates detected")
+    lines += ["", "-" * 34]
+    for d in dets:
+        b = d["bbox"]
+        lines.append(f"  Box: ({b[0]:.0f},{b[1]:.0f})-({b[2]:.0f},{b[3]:.0f})")
+
+    axes[2].text(0.5, 0.5, "\n".join(lines),
+                 transform=axes[2].transAxes, fontsize=11,
+                 va="center", ha="center", fontfamily="monospace",
+                 bbox={"boxstyle": "round,pad=0.6",
+                       "facecolor": "lightyellow", "alpha": 0.9})
+    axes[2].set_title("Inference Numbers", fontsize=12)
+    axes[2].axis("off")
+
+    plt.tight_layout()
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(str(out_path), bbox_inches="tight", dpi=100)
+    plt.close(fig)
+    logger.info("Figure saved -> %s", out_path)
+    return out_path
+
+
+def _make_video_figure(inp_frame, ann_frame, avg_fps, frame_no,
+                       unique_texts, times, out_path):
+    """Create a 3-panel figure for a representative video frame."""
+    inp_rgb = cv2.cvtColor(inp_frame, cv2.COLOR_BGR2RGB)
+    ann_rgb = cv2.cvtColor(ann_frame, cv2.COLOR_BGR2RGB)
+
+    fig, axes = plt.subplots(1, 3, figsize=(20, 7), dpi=100)
+    fig.suptitle("Phase 3 -- DL Streamer / Video Pipeline", fontsize=15,
+                 fontweight="bold")
+
+    axes[0].imshow(inp_rgb)
+    axes[0].set_title(f"Input Frame #{frame_no}", fontsize=12)
+    axes[0].axis("off")
+
+    axes[1].imshow(ann_rgb)
+    axes[1].set_title("Annotated Frame", fontsize=12)
+    axes[1].axis("off")
+
+    lines = [
+        "Video Inference Results",
+        "=" * 34,
+        "",
+        f"Avg FPS         : {avg_fps:.1f}",
+        f"Avg det/frame   : {times['avg_det_ms']:.1f} ms",
+        f"Total OCR time  : {times['total_ocr_ms']:.1f} ms",
+        f"Frames processed: {times['frames']}",
+        "",
+        "-" * 34,
+        "Unique Plates Seen:",
+        "-" * 34,
+    ]
+    if unique_texts:
+        for i, t in enumerate(unique_texts, 1):
+            lines.append(f"  #{i}  {t}")
+    else:
+        lines.append("  None")
+
+    axes[2].text(0.5, 0.5, "\n".join(lines),
+                 transform=axes[2].transAxes, fontsize=11,
+                 va="center", ha="center", fontfamily="monospace",
+                 bbox={"boxstyle": "round,pad=0.6",
+                       "facecolor": "lightyellow", "alpha": 0.9})
+    axes[2].set_title("Inference Numbers", fontsize=12)
+    axes[2].axis("off")
+
+    plt.tight_layout()
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(str(out_path), bbox_inches="tight", dpi=100)
+    plt.close(fig)
+    logger.info("Video figure saved -> %s", out_path)
+    return out_path
+
+
+# ---------------------------------------------------------------------------
+# Phase 1: Native .pt YOLO + PaddleOCR (non-optimized)
+# ---------------------------------------------------------------------------
+def run_phase1(input_image, confidence=0.5, model_size=DEFAULT_MODEL_SIZE,
+               output=None):
+    """Phase 1 -- native YOLO .pt model + PaddleOCR on a single image."""
+    from ultralytics import YOLO
+
+    pt_path = _yolo_pt_path(model_size)
+    logger.info("[Phase 1] YOLO .pt  : %s  (YOLO_NATIVE_BASE)", pt_path)
+    logger.info("[Phase 1] OCR dir   : %s", PPOCR_MODEL_DIR)
+
+    img = cv2.imread(str(input_image))
+    if img is None:
+        raise ValueError(f"Cannot read image: {input_image}")
+    logger.info("[Phase 1] Image %s (%dx%d)", Path(input_image).name,
+                img.shape[1], img.shape[0])
+
+    total_start = time.perf_counter()
+
+    model = YOLO(str(pt_path))
+    dets, det_ms = _detect(model, img, confidence)
+    annotated = _draw(img, dets)
+    crops = _crop_plates(img, dets)
+    texts, ocr_ms = _ocr(crops)
+    total_ms = (time.perf_counter() - total_start) * 1000
+
+    times = {"det_ms": det_ms, "ocr_ms": ocr_ms, "total_ms": total_ms}
+
+    out_dir = OUTPUT_DIR / "phase1"
+    stem = Path(input_image).stem
+    out_path = Path(output) if output else out_dir / f"{stem}_phase1.png"
+
+    _make_figure(img, annotated, dets, texts, times,
+                 "Phase 1 -- Native YOLO + PaddleOCR (non-optimized)", out_path)
+
+    _print_summary("Phase 1", dets, texts, times, out_path)
+    return {"detections": dets, "texts": texts, "times": times,
+            "output": str(out_path)}
+
+
+# ---------------------------------------------------------------------------
+# Phase 2: OpenVINO-optimized YOLO + PaddleOCR
+# ---------------------------------------------------------------------------
+def run_phase2(input_image, confidence=0.5, model_size=DEFAULT_MODEL_SIZE,
+               device="CPU", output=None):
+    """Phase 2 -- OpenVINO IR YOLO model + PaddleOCR on a single image."""
+    from ultralytics import YOLO
+
+    ov_path = _yolo_ov_path(model_size)
+    logger.info("[Phase 2] YOLO OV   : %s  (YOLO_OV_BASE)", ov_path)
+    logger.info("[Phase 2] OCR dir   : %s", PPOCR_MODEL_DIR)
+
+    img = cv2.imread(str(input_image))
+    if img is None:
+        raise ValueError(f"Cannot read image: {input_image}")
+    logger.info("[Phase 2] Image %s (%dx%d)", Path(input_image).name,
+                img.shape[1], img.shape[0])
+
+    total_start = time.perf_counter()
+
+    model = YOLO(str(ov_path), task="detect")
+    dets, det_ms = _detect(model, img, confidence)
+    annotated = _draw(img, dets, color=(255, 165, 0))
+    crops = _crop_plates(img, dets)
+    texts, ocr_ms = _ocr(crops)
+    total_ms = (time.perf_counter() - total_start) * 1000
+
+    times = {"det_ms": det_ms, "ocr_ms": ocr_ms, "total_ms": total_ms}
+
+    out_dir = OUTPUT_DIR / "phase2"
+    stem = Path(input_image).stem
+    out_path = Path(output) if output else out_dir / f"{stem}_phase2.png"
+
+    _make_figure(img, annotated, dets, texts, times,
+                 f"Phase 2 -- OpenVINO Optimized ({device})", out_path)
+
+    _print_summary("Phase 2", dets, texts, times, out_path)
+    return {"detections": dets, "texts": texts, "times": times,
+            "output": str(out_path)}
+
+
+# ---------------------------------------------------------------------------
+# Phase 3: DL Streamer pipeline (video)
+# ---------------------------------------------------------------------------
+OCR_FRAME_INTERVAL = 10
+SAMPLE_FRAME_INDEX = 30
+
+
+def _gstreamer_available():
+    try:
+        r = subprocess.run(["gst-launch-1.0", "--version"],
+                           capture_output=True, text=True, timeout=10)
+        return r.returncode == 0
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return False
+
+
+def _build_dlstreamer_pipeline(input_video, detection_model, ocr_model,
+                               device, output_mode="fps"):
+    """Build a DL Streamer pipeline string adapted from the
+    open-edge-platform/dlstreamer license_plate_recognition sample."""
+
+    # Source element
+    if input_video.startswith("/dev/video"):
+        source = f"v4l2src device={input_video}"
+    elif "://" in input_video:
+        source = f"urisourcebin buffer-size=4096 uri={input_video}"
+    else:
+        source = f"filesrc location={input_video}"
+
+    # Decode / pre-process
+    if device == "GPU":
+        decode = "decodebin3 ! vapostproc ! video/x-raw(memory:VAMemory)"
+        preproc = "pre-process-backend=va-surface-sharing"
+    else:
+        decode = "decodebin3"
+        preproc = "pre-process-backend=opencv"
+
+    # Detect + classify
+    detect = f"gvadetect model={detection_model} device={device} {preproc}"
+    classify = ""
+    if ocr_model:
+        classify = (f"! queue ! videoconvert ! "
+                    f"gvaclassify model={ocr_model} device={device} "
+                    f"{preproc}")
+
+    # Sink
+    if output_mode == "display":
+        sink = ("vapostproc ! gvawatermark ! videoconvert ! "
+                "gvafpscounter ! autovideosink")
+    elif output_mode == "json":
+        sink = ("gvametaconvert ! gvametapublish file-format=json-lines "
+                "file-path=output.json ! fakesink async=false")
+    else:  # fps
+        sink = "gvafpscounter ! fakesink async=false"
+
+    parts = [
+        f"gst-launch-1.0 {source}",
+        f"! {decode}",
+        f"! queue ! {detect}",
+    ]
+    if classify:
+        parts.append(classify)
+    parts.append(f"! queue ! {sink}")
+
+    return " ".join(parts)
+
+
+def _run_video_opencv(input_video, model, confidence, max_frames, out_dir):
+    """Fallback: process video frame-by-frame with OpenCV + YOLO + OCR."""
+    cap = cv2.VideoCapture(input_video)
+    if not cap.isOpened():
+        raise ValueError(f"Cannot open video: {input_video}")
+
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
+    w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    logger.info("Video %s %dx%d %.1f FPS %d frames",
+                input_video, w, h, fps, total_frames)
+
+    out_vid = out_dir / "annotated_output.mp4"
+    writer = cv2.VideoWriter(str(out_vid),
+                             cv2.VideoWriter_fourcc(*"mp4v"), fps, (w, h))
+
+    limit = max_frames if max_frames > 0 else total_frames
+    count = 0
+    total_det = 0.0
+    total_ocr = 0.0
+    all_texts = []
+    fps_vals = []
+    sample_in = sample_out = None
+
+    while cap.isOpened() and count < limit:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        t0 = time.perf_counter()
+        dets, dt = _detect(model, frame, confidence)
+        total_det += dt
+        annotated = _draw(frame, dets)
+
+        if dets and count % OCR_FRAME_INTERVAL == 0:
+            crops = _crop_plates(frame, dets)
+            texts, ot = _ocr(crops)
+            total_ocr += ot
+            all_texts.extend(texts)
+
+        frame_ms = (time.perf_counter() - t0) * 1000
+        cur_fps = 1000.0 / frame_ms if frame_ms > 0 else 0
+        fps_vals.append(cur_fps)
+
+        cv2.putText(annotated, f"FPS: {cur_fps:.1f}", (10, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2)
+        writer.write(annotated)
+
+        if count == min(SAMPLE_FRAME_INDEX, limit - 1):
+            sample_in = frame.copy()
+            sample_out = annotated.copy()
+
+        count += 1
+        if count % 50 == 0:
+            logger.info("Processed %d/%d frames", count, limit)
+
+    cap.release()
+    writer.release()
+
+    avg_fps = sum(fps_vals) / len(fps_vals) if fps_vals else 0
+    unique = sorted(set(all_texts) - {"[unreadable]"})
+
+    times_info = {
+        "avg_det_ms": total_det / max(count, 1),
+        "total_ocr_ms": total_ocr,
+        "frames": count,
+    }
+
+    if sample_in is not None and sample_out is not None:
+        fig_path = out_dir / "video_comparison.png"
+        _make_video_figure(sample_in, sample_out, avg_fps,
+                           min(SAMPLE_FRAME_INDEX, count - 1),
+                           unique, times_info, fig_path)
+
+    logger.info("Video done: %d frames, avg FPS %.1f", count, avg_fps)
+    return {"frames": count, "avg_fps": avg_fps, "unique_plates": unique,
+            "output_video": str(out_vid),
+            "comparison": str(out_dir / "video_comparison.png")}
+
+
+def run_phase3(input_video, confidence=0.5, model_size=DEFAULT_MODEL_SIZE,
+               device="CPU", output_mode="fps", max_frames=0, output=None):
+    """Phase 3 -- DL Streamer pipeline (or OpenCV fallback) on video.
+
+    Uses YOLO_OV_BASE for the detection model (OpenVINO IR)."""
+    from ultralytics import YOLO
+
+    ov_det = _yolo_ov_path(model_size)
+    ov_ocr = _ppocr_ov_xml() if _ppocr_ov_xml().exists() else None
+    out_dir = Path(output) if output else OUTPUT_DIR / "phase3"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    if not Path(input_video).exists():
+        raise FileNotFoundError(f"Input video not found: {input_video}")
+
+    use_dls = _gstreamer_available()
+
+    if use_dls:
+        logger.info("[Phase 3] DL Streamer available -- building pipeline")
+        pipeline = _build_dlstreamer_pipeline(
+            input_video, str(ov_det),
+            str(ov_ocr) if ov_ocr else None,
+            device, output_mode)
+        logger.info("Pipeline:\n  %s", pipeline)
+
+        start = time.perf_counter()
+        result = subprocess.run(
+            pipeline.split(),
+            capture_output=True, text=True, timeout=600)
+        duration = time.perf_counter() - start
+
+        if result.returncode != 0:
+            logger.warning("DL Streamer failed (rc=%d), falling back to OpenCV",
+                           result.returncode)
+            use_dls = False
+        else:
+            logger.info("DL Streamer finished in %.1f s", duration)
+            stdout = result.stdout
+            print(stdout[-2000:] if len(stdout) > 2000 else stdout)
+            return {"pipeline": pipeline, "duration_s": duration,
+                    "stdout": stdout, "stderr": result.stderr}
+
+    if not use_dls:
+        logger.info("[Phase 3] Using OpenCV fallback pipeline")
+        model = YOLO(str(ov_det))
+        return _run_video_opencv(input_video, model, confidence,
+                                 max_frames, out_dir)
+
+
+# ---------------------------------------------------------------------------
+# Console summary
+# ---------------------------------------------------------------------------
+def _print_summary(phase, dets, texts, times, out_path):
+    sep = "=" * 44
+    print(f"\n{sep}")
+    print(f"  {phase} -- License Plate Results")
+    print(sep)
+    print(f"  Plates found  : {len(dets)}")
+    print(f"  Detection     : {times['det_ms']:.1f} ms")
+    print(f"  OCR           : {times['ocr_ms']:.1f} ms")
+    print(f"  Total         : {times['total_ms']:.1f} ms")
+    if texts:
+        print("  " + "-" * 40)
+        for i, t in enumerate(texts, 1):
+            print(f"  Plate #{i}: {t}")
+    print(sep)
+    print(f"  Output: {out_path}\n")
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+def main():
+    parser = argparse.ArgumentParser(
+        description="License Plate Detection & Recognition -- 3 Phases",
+    )
+    parser.add_argument(
+        "--phase", required=True,
+        choices=["1", "2", "3", "all"],
+        help="Phase to run: 1 (native), 2 (OpenVINO), 3 (DL Streamer), all",
+    )
+    parser.add_argument("--input", help="Path to input image (phases 1/2)")
+    parser.add_argument("--video", help="Path to input video (phase 3)")
+    parser.add_argument("--confidence", type=float, default=0.5)
+    parser.add_argument("--model-size", choices=VALID_MODEL_SIZES,
+                        default=DEFAULT_MODEL_SIZE)
+    parser.add_argument("--device", default="CPU",
+                        help="OpenVINO device (CPU, GPU, AUTO)")
+    parser.add_argument("--output-mode", default="fps",
+                        choices=["display", "fps", "json"],
+                        help="DL Streamer output mode (phase 3)")
+    parser.add_argument("--max-frames", type=int, default=0,
+                        help="Max video frames to process (0=all)")
+    parser.add_argument("--output", default=None,
+                        help="Custom output path")
+    args = parser.parse_args()
+
+    phases = [args.phase] if args.phase != "all" else ["1", "2", "3"]
+
+    for phase in phases:
+        try:
+            if phase in ("1", "2"):
+                if not args.input:
+                    parser.error(f"--input required for phase {phase}")
+                if phase == "1":
+                    run_phase1(args.input, args.confidence,
+                               args.model_size, args.output)
+                else:
+                    run_phase2(args.input, args.confidence,
+                               args.model_size, args.device, args.output)
+            elif phase == "3":
+                video = args.video or args.input
+                if not video:
+                    parser.error("--video (or --input) required for phase 3")
+                run_phase3(video, args.confidence, args.model_size,
+                           args.device, args.output_mode,
+                           args.max_frames, args.output)
+        except Exception as e:
+            logger.error("Phase %s failed: %s", phase, e)
+            if len(phases) == 1:
+                sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
+'''
+
+with open('/home/vinod/repos/oep-developer-guides/license_plate_app.py', 'w') as f:
+    f.write(content)
+print(f"Written {len(content.splitlines())} lines")
+PYEOF
+
+Ran terminal command:  cd /home/vinod/repos/oep-developer-guides && python3 -c "import ast; ast.parse(open('license_plate_app.py').read()); print('Syntax OK')"
+
+Now let me verify the key constants and their usage: 
+
+Read [](file:///home/vinod/repos/oep-developer-guides/license_plate_app.py#38-38), lines 38 to 60
+
+Searched for regex `YOLO_NATIVE_BASE|YOLO_OV_BASE` (`**/license_plate_app.py`), 7 results
+
+The file is correctly structured with two separate base constants:
+
+- **`YOLO_NATIVE_BASE`** — points to morsetechlab_yolov11-license-plate-detection (the `.pt` files), used by `_yolo_pt_path()` in **Phase 1**
+- **`YOLO_OV_BASE`** — points to models_ov (the OpenVINO `.xml` files), used by `_yolo_ov_path()` in **Phase 2** and **Phase 3**
+
+Each phase's `run_phase*` function logs which base constant it uses for traceability.
+
+User: Getting this error:  [ERROR] Phase 1 failed: (Unimplemented) ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]  (at /paddle/paddle/fluid/framework/new_executor/instruction/onednn/onednn_instruction.cc:116)
+
+GitHub Copilot: 
+
+This is a PaddlePaddle OneDNN backend compatibility issue. The fix is to disable MKL-DNN in the PaddleOCR initialization. 
+
+Replacing 11 lines with 12 lines in [](file:///home/vinod/repos/oep-developer-guides/license_plate_app.py)
+
+
+```
+
+```
+Added `enable_mkldnn=False` to the `PaddleOCR` constructor to bypass the OneDNN `ConvertPirAttribute2RuntimeAttribute` bug. Try running Phase 1 again.
+
+Made changes.
+
+User: What PaddleOCR API needs to be used so we can detect the number plate text?
+
+GitHub Copilot: 
+
+ 
+
+Ran terminal command:  source /home/vinod/repos/oep-developer-guides/venv/bin/activate && python3 -c "import paddleocr; print(paddleocr.__version__); print(dir(paddleocr.PaddleOCR()))" 2>&1 | tail -5
+
+Ran terminal command:  source /home/vinod/repos/oep-developer-guides/venv/bin/activate && python3 -c "
+import paddleocr
+print('Version:', paddleocr.__version__)
+help(paddleocr.PaddleOCR.predict)
+" 2>&1 | head -30
+
+Ran terminal command:  source /home/vinod/repos/oep-developer-guides/venv/bin/activate && python3 -c "
+from paddleocr import PaddleOCR
+import cv2, numpy as np
+
+# Create a small test image with text
+img = np.ones((50, 200, 3), dtype=np.uint8) * 255
+cv2.putText(img, 'ABC1234', (10, 35), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,0), 2)
+
+ocr = PaddleOCR(use_textline_orientation=True, lang='en', enable_mkldnn=False)
+result = ocr.predict(img)
+print('Type:', type(result))
+for r in result:
+    print('Result keys/type:', type(r))
+    print(r)
+    break
+" 2>&1 | tail -20
+
+Now I can see the PaddleOCR v3.4.0 `predict` API output structure. The result is an iterator of dicts with keys `rec_texts` and `rec_scores`. The current `_ocr` function is parsing the old v2.x format. Let me fix it: 
+
+Replacing 21 lines with 23 lines in [](file:///home/vinod/repos/oep-developer-guides/license_plate_app.py)
+
+
+```
+
+```
+With PaddleOCR **v3.4.0**, the correct API is:
+
+- **`ocr.predict(image)`** — returns an iterator of dicts, each containing:
+  - `rec_texts`: list of recognized strings (e.g. `['ABC1234']`)
+  - `rec_scores`: list of confidence scores
+  - `dt_polys`: detected text regions
+
+The old `ocr.ocr()` API from v2.x is deprecated. The `_ocr` function is now updated to use `predict()` and extract `rec_texts` from the result dict.
+
+Made changes.
+
+User: Getting this error: '/home/vinod/repos/oep-developer-guides/models/morsetechlab_yolov11-license-plate-detection/models_ov/license-plate-finetune-v1m_openvino_model/license-plate-finetune-v1m.xml' is not a supported model format
+
+GitHub Copilot: 
+
+Let me check the OpenVINO model directory contents and the XML file:  
+
+Ran terminal command:  head -5 /home/vinod/repos/oep-developer-guides/models/morsetechlab_yolov11-license-plate-detection/models_ov/license-plate-finetune-v1m_openvino_model/license-plate-finetune-v1m.xml
+
+Read [](file:///home/vinod/repos/oep-developer-guides/models/morsetechlab_yolov11-license-plate-detection/models_ov/license-plate-finetune-v1m_openvino_model)
+
+Ran terminal command:  cat /home/vinod/repos/oep-developer-guides/models/morsetechlab_yolov11-license-plate-detection/models_ov/license-plate-finetune-v1m_openvino_model/metadata.yaml
+
+The files look correct. The issue is that `YOLO()` needs to be pointed at the **directory**, not the `.xml` file directly. Let me verify: 
+
+Ran terminal command:  source /home/vinod/repos/oep-developer-guides/venv/bin/activate && python3 -c "
+from ultralytics import YOLO
+# Try loading the directory instead of the .xml file
+model = YOLO('/home/vinod/repos/oep-developer-guides/models/morsetechlab_yolov11-license-plate-detection/models_ov/license-plate-finetune-v1m_openvino_model', task='detect')
+print('Model loaded OK:', type(model))
+" 2>&1 | tail -5
+
+The fix is to pass the **directory path** (not the `.xml` file) to `YOLO()`. Ultralytics expects the folder containing the `.xml`, `.bin`, and `metadata.yaml`.  
+
+Replacing 10 lines with 15 lines in [](file:///home/vinod/repos/oep-developer-guides/license_plate_app.py)
+
+
+```
+
+```
+`_yolo_ov_path()` now returns the **model directory** (e.g., `.../license-plate-finetune-v1m_openvino_model/`) instead of the `.xml` file. Ultralytics requires the folder containing the `.xml`, `.bin`, and `metadata.yaml` to load an OpenVINO model. Try Phase 2 again.
+
+Made changes.
+
+User: Why car_phase1.png has better detection rate when compared to car_phase2.png?
+The phase 2 is where we run the openvino optimized yolo model and in phase 1 we run native yolo pt model
+
+GitHub Copilot: 
+
+Let me look at the output images and compare the results:  
+
+Viewed image [](file:///home/vinod/repos/oep-developer-guides/output/phase1/car_phase1.png)
+
+Viewed image [](file:///home/vinod/repos/oep-developer-guides/output/phase2/car_phase2.png)
+
+User: The phase 2 openvino optimized yolo .xml/.bin detection time seems to be more than the phase 1 yolo pt detection time, how to fix this
+
+GitHub Copilot: 
+
+User: The phase 2 openvino optimized yolo .xml/.bin detection time seems to be more than the phase 1 yolo pt detection time, how to fix this
+
+GitHub Copilot: Compacted conversation
+
+User: The phase 2 openvino optimized yolo .xml/.bin detection time seems to be more than the phase 1 yolo pt detection time, how to fix this
+
+GitHub Copilot: Compacted conversation
+
+User: The phase 2 openvino optimized yolo .xml/.bin detection time seems to be more than the phase 1 yolo pt detection time, how to fix this
+
+GitHub Copilot: Compacted conversation
+
+User: The phase 2 openvino optimized yolo .xml/.bin detection time seems to be more than the phase 1 yolo pt detection time, how to fix this
+
+GitHub Copilot: Compacted conversation
+
+User: @agent Try Again
+
+GitHub Copilot: 
