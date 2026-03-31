@@ -22,7 +22,7 @@ pipelines on Intel hardware, using the following stack:
 
 ## Files to Build
 
-When asked to build this project from scratch, produce two scripts:
+When asked to build this project from scratch, produce three files:
 
 ### 1. `download_and_convert_openvino.py`
 Downloads models from Hugging Face and converts YOLO `.pt` → OpenVINO IR via
@@ -38,6 +38,28 @@ Downloads models from Hugging Face and converts YOLO `.pt` → OpenVINO IR via
 
 ### 2. Main application (e.g. `license_plate_app.py`)
 Three-phase integrated application. See architecture below.
+
+### 3. `README.md`
+A project README with end-to-end instructions for running the application.
+It must include:
+- A summary table of the three-phase architecture (Phase, Input, Detection
+  Model, OCR Engine, Runtime)
+- **Prerequisites** section (Python 3.10+, optional DL Streamer)
+- **Install dependencies** step (`pip install -r requirements.txt`)
+- **Download models & convert YOLO to OpenVINO IR** step — describe what
+  `download_and_convert_openvino.py` does and show its CLI options
+  (`--models-dir`, `--skip-download`, `--skip-convert`); include the
+  expected `models/` directory tree after the script runs
+- **Convert PP-OCRv4 to OpenVINO IR (manual)** step — reproduce the
+  exact `paddlex` / `paddle2onnx` / `ovc` commands from the "Converting
+  PP-OCRv4 to OpenVINO IR" section below; note that this is only required
+  for Phase 3 `gvaclassify` and not for Phases 1/2
+- **Run the application** section with sub-sections for each phase
+  (`--phase 1`, `--phase 2`, `--phase 3`) plus running all phases at once
+- **Output** section describing the 3-panel visualisation saved under
+  `output/phase{1,2,3}/`
+- **Troubleshooting** table matching the "Common Errors & Fixes" section
+  below
 
 ---
 
