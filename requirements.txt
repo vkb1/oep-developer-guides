@@ -1,0 +1,8 @@
+ultralytics==8.4.31
+openvino==2026.0.0
+paddleocr==3.4.0
+huggingface-hub==1.8.0
+opencv-python==4.13.0.92
+matplotlib==3.10.8
+Pillow==12.1.1
+numpy==2.4.4

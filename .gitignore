@@ -205,3 +205,10 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Smart Parking - Downloaded models and output artifacts
+models/
+output/
+data/
+*.mp4
+*.avi
