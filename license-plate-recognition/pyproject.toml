@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=75.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "license-plate-recognition"
+version = "0.1.0"
+description = "Multi-stage license plate detection and OCR application using YOLO, OpenVINO, and DL Streamer"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.10"
+dependencies = [
+    "ultralytics>=8.4.0",
+    "huggingface-hub>=0.30.0",
+    "opencv-python-headless>=4.11.0",
+    "numpy>=2.0.0",
+    "matplotlib>=3.10.0",
+    "openvino>=2025.1.0",
+    "Pillow>=11.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.11.0",
+]
+
+[project.scripts]
+lpr = "lpr.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]

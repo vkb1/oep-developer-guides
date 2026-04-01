@@ -205,3 +205,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# License Plate Recognition — runtime artifacts
+license-plate-recognition/models/
+license-plate-recognition/output/*.png
+license-plate-recognition/output/*.json
+license-plate-recognition/output/*.mp4
