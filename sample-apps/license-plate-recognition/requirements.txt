@@ -1,0 +1,25 @@
+# Common requirements for all sample apps
+# Install with: pip install -r requirements.txt
+
+# Core ML frameworks
+torch==2.11.0
+torchvision==0.26.0
+transformers==5.3.0
+
+# YOLO model support
+ultralytics==8.4.29
+
+# OpenVINO toolkit
+openvino==2026.0.0
+openvino-dev==2024.6.0
+
+# Image processing
+opencv-python==4.13.0.92
+Pillow==12.1.1
+
+# Visualization
+matplotlib==3.10.8
+
+# Utilities
+numpy==2.4.3
+huggingface-hub==1.8.0

@@ -1,0 +1,15 @@
+# V2 Sample App - OpenVINO Optimized Models
+# License Plate Detection & Text Extraction
+
+torch==2.11.0
+torchvision==0.26.0
+transformers==5.3.0
+ultralytics==8.4.29
+openvino==2026.0.0
+openvino-dev==2024.6.0
+optimum-intel==1.27.0
+opencv-python==4.13.0.92
+Pillow==12.1.1
+matplotlib==3.10.8
+numpy==2.4.3
+huggingface-hub==1.8.0
